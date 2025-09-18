@@ -241,7 +241,7 @@ export default function ComicDetailClient({
 
   if (!comicData) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gray-50">
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
         <BookOutlined style={{ fontSize: "4rem", color: "#d9d9d9" }} />
         <Title level={3} className="mt-4">
           Không tìm thấy truyện

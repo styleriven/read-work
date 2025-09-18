@@ -59,13 +59,15 @@ class ComicRepository extends BaseRepository<IComic> {
       }
       pipeline.push({ $sample: { size } });
     }
-    const comics = await this.model.aggregate(pipeline).exec();
-    const comicsWithId = comics.map((c) => ({ ...c, id: c._id }));
 
-    return await this.model.populate(comicsWithId, {
+    let comics = await this.model.aggregate(pipeline).exec();
+    const comicsWithId = comics.map((c) => ({ ...c, id: c._id }));
+    comics = await this.model.populate(comicsWithId, {
       path: "categories",
       select: "id name",
     });
+
+    return comics;
   }
 
   async checkComicOwnership(userId: string, comicId: string): Promise<boolean> {

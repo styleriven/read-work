@@ -1,4 +1,3 @@
-// utils/mail-templates.js
 export const templates = [
   {
     type: "emailVerification",
