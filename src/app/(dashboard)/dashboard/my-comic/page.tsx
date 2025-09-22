@@ -1,3 +1,4 @@
+import Loading from "@/components/ui/loading";
 import MyComicClient from "./my-comic-client";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
 import { IComic } from "@models/interfaces/i-comic";
@@ -30,7 +31,7 @@ export default async function MyComicPage({ searchParams }: PageProps) {
     console.error("Error fetching comics:", err);
   }
 
-  const { data: initialComics, totalCount: total, isLoading } = result;
+  const { data: initialComics, totalCount: total } = result;
 
   return (
     <MyComicClient

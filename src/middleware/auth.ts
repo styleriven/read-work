@@ -22,63 +22,83 @@ function matchRoute(pathname: string, routes: (string | RegExp)[]): boolean {
 }
 
 export async function authMiddleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const ignoredPaths = [
-    "/.well-known/appspecific/",
-    "/.well-known/assetlinks.json",
-    "/favicon.ico",
-  ];
-  if (ignoredPaths.some((p) => pathname.startsWith(p))) {
+  try {
+    const { pathname } = request.nextUrl;
+
+    const ignoredPaths = [
+      "/.well-known/",
+      "/favicon.ico",
+      "/robots.txt",
+      "/sitemap.xml",
+    ];
+
+    if (ignoredPaths.some((p) => pathname.startsWith(p))) {
+      return NextResponse.next();
+    }
+
+    let token;
+    try {
+      token = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+      });
+    } catch (error) {
+      console.error("Error getting token:", error);
+      token = null;
+    }
+
+    const isLoggedIn = !!token;
+    const userRole: number =
+      typeof token?.role === "number" ? token.role : UserRoles.User;
+    const isAdmin = userRole === UserRoles.Admin;
+    const isSystemAdmin = userRole === UserRoles.SystemAdmin || isAdmin;
+
+    const accountAge = token?.accountCreatedAt
+      ? Math.floor(
+          (Date.now() - new Date(token.accountCreatedAt as string).getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : 0;
+
+    // Redirect to login for protected routes
+    if (!isLoggedIn && matchRoute(pathname, protectedRoutes)) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Check admin access
+    if (!isAdmin && !isSystemAdmin && matchRoute(pathname, adminRoutes)) {
+      return NextResponse.redirect(new URL("/403", request.url));
+    }
+
+    const response = NextResponse.next();
+
+    // Set user headers if logged in
+    if (isLoggedIn && token) {
+      response.headers.set("x-user-id", token.sub || "");
+      response.headers.set("x-user-email", token.email || "");
+      response.headers.set("x-user-role", userRole.toString());
+      response.headers.set(
+        "x-user-verified",
+        token.isVerified ? "true" : "false"
+      );
+      response.headers.set("x-account-age", accountAge.toString());
+    }
+
+    return response;
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+    // Return next response in case of error to prevent blocking
     return NextResponse.next();
   }
-
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-
-  const isLoggedIn = !!token;
-  const userRole: number =
-    typeof token?.role === "number" ? token.role : UserRoles.User;
-  const isAdmin = userRole === UserRoles.Admin;
-  const isSystemAdmin = userRole === UserRoles.SystemAdmin || isAdmin;
-
-  const accountAge = token?.accountCreatedAt
-    ? Math.floor(
-        (Date.now() - new Date(token.accountCreatedAt as string).getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
-    : 0;
-
-  if (!isLoggedIn && matchRoute(pathname, protectedRoutes)) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  if (!isAdmin && !isSystemAdmin && matchRoute(pathname, adminRoutes)) {
-    return NextResponse.redirect(new URL("/403", request.url));
-  }
-
-  const response = NextResponse.next();
-
-  if (isLoggedIn && token) {
-    response.headers.set("x-user-id", token.sub || "");
-    response.headers.set("x-user-email", token.email || "");
-    response.headers.set("x-user-role", userRole.toString());
-    response.headers.set(
-      "x-user-verified",
-      token.isVerified ? "true" : "false"
-    );
-    response.headers.set("x-account-age", accountAge.toString());
-  }
-  return response;
 }
 
 export function verifyToken(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization");
     if (!authHeader) return null;
+
     const token = authHeader.split(" ")[1];
     if (!token) return null;
 
@@ -98,24 +118,42 @@ export function verifyToken(request: NextRequest) {
 
 export const withAuth = (allowedRoles: UserRole[]) => {
   return async (request: NextRequest) => {
-    const token = verifyToken(request);
-    if (!token || "error" in token)
+    try {
+      const token = verifyToken(request);
+      if (!token || "error" in token) {
+        return {
+          status: HttpStatusCode.Unauthorized,
+          error: token?.error || "Unauthorized",
+        };
+      }
+
+      const userId = token.sub;
+      const user = await userAction.getUserById(userId);
+      if (!user) {
+        return {
+          status: HttpStatusCode.Unauthorized,
+          error: "User not found",
+        };
+      }
+
+      (request as any).user = user;
+
+      const hasRequiredRights =
+        allowedRoles.length === 0 || allowedRoles.includes(user.role);
+      if (!hasRequiredRights) {
+        return {
+          status: HttpStatusCode.Forbidden,
+          error: "Permission denied",
+        };
+      }
+
+      return { user };
+    } catch (error) {
+      console.error("Auth wrapper error:", error);
       return {
-        status: HttpStatusCode.Unauthorized,
-        error: token?.error || "Unauthorized",
+        status: HttpStatusCode.InternalServerError,
+        error: "Authentication error",
       };
-
-    const userId = token.sub;
-    const user = await userAction.getUserById(userId);
-    if (!user)
-      return { status: HttpStatusCode.Unauthorized, error: "Unauthorized" };
-    (request as any).user = user;
-
-    const hasRequiredRights =
-      allowedRoles.length === 0 || allowedRoles.includes(user.role);
-    if (!hasRequiredRights)
-      return { status: HttpStatusCode.Forbidden, error: "Permission denied" };
-
-    return { user };
+    }
   };
 };

@@ -15,7 +15,7 @@ export default function ExclusiveComic() {
     try {
       setIsLoading(true);
       const data = await ComicQuery.getRandomComics(5);
-      console.log("Fetched exclusive comics:", data);
+
       setComics(data);
     } catch (error) {
       console.error("Error fetching comics:", error);

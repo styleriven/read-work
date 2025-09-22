@@ -11,7 +11,6 @@ import { $fetch, $globalFetch } from "@/lib/axios";
 import { IUser } from "@/types/user";
 import UserRole from "@/enums/Role";
 import { REQUEST_URLS_V1 } from "@/config/request-urls";
-import credentials from "next-auth/providers/credentials";
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
