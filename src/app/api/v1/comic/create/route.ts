@@ -8,9 +8,10 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
     const { title, authorName, description, category, type, coverImage } =
       await req.json();
@@ -23,8 +24,8 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
       !category ||
       !coverImage
     ) {
-      return new NextResponse(
-        JSON.stringify({ message: "All fields are required" }),
+      return NextResponse.json(
+        { message: "All fields are required" },
         { status: HttpStatusCode.BadRequest }
       );
     }
@@ -38,7 +39,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
       authorId: auth.user!.id,
     });
 
-    return new NextResponse(JSON.stringify(createdComic), {
+    return NextResponse.json(createdComic, {
       status: HttpStatusCode.Ok,
     });
   });

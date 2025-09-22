@@ -11,7 +11,7 @@ import { $fetch, $globalFetch } from "@/lib/axios";
 import { IUser } from "@/types/user";
 import UserRole from "@/enums/Role";
 import { REQUEST_URLS_V1 } from "@/config/request-urls";
-
+import credentials from "next-auth/providers/credentials";
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -223,11 +223,10 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const response = await $fetch.post(REQUEST_URLS_V1.LOGIN, {
+          const response = await $globalFetch.post(REQUEST_URLS_V1.LOGIN, {
             email: credentials.email,
             password: credentials.password,
           });
-
           const userData = response?.data?.user;
           const tokens = response?.data?.tokens;
           if (!userData || !tokens) {
@@ -239,6 +238,46 @@ export const authOptions: NextAuthOptions = {
             ...tokens,
           };
         } catch (error: any) {
+          return null;
+        }
+      },
+    }),
+
+    CredentialsProvider({
+      id: "token",
+      name: "Token",
+      type: "credentials",
+      credentials: {
+        user: {
+          label: "User Data",
+          type: "object",
+        },
+        tokens: {
+          label: "Tokens",
+          type: "object",
+        },
+      },
+      async authorize(credentials) {
+        if (!credentials?.user || !credentials?.tokens) {
+          return null;
+        }
+
+        try {
+          const userData = JSON.parse(credentials.user);
+          const tokens = JSON.parse(credentials.tokens);
+
+          // Verify that we have the required data
+          if (!userData || !tokens?.access || !tokens?.refresh) {
+            return null;
+          }
+
+          return {
+            ...userData,
+            access: tokens.access,
+            refresh: tokens.refresh,
+          };
+        } catch (error: any) {
+          console.error("Error in token provider:", error);
           return null;
         }
       },

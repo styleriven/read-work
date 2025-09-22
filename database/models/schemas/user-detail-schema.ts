@@ -1,7 +1,5 @@
 import { IUserDetail } from "@models/interfaces/i-user-detail";
-import { u } from "framer-motion/dist/m";
 import mongoose, { Schema } from "mongoose";
-import { v4 } from "uuid";
 
 const userDetailSchema = new Schema<IUserDetail>(
   {

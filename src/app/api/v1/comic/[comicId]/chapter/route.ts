@@ -10,8 +10,8 @@ export const GET = async (
 ): Promise<NextResponse> => {
   const { comicId } = await context.params;
   if (!comicId)
-    return new NextResponse(
-      JSON.stringify({ message: "Comic ID is required" }),
+    return NextResponse.json(
+      { message: "Comic ID is required" },
       {
         status: HttpStatusCode.BadRequest,
       }
@@ -30,7 +30,7 @@ export const GET = async (
     page,
     limit
   );
-  return new NextResponse(JSON.stringify(chapters), {
+  return NextResponse.json(chapters, {
     status: HttpStatusCode.Ok,
   });
 };
@@ -42,27 +42,25 @@ export const POST = async (
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
 
     const { comicId } = await context.params;
     if (!comicId)
-      return new NextResponse(
-        JSON.stringify({ message: "Comic ID is required" }),
-        {
-          status: HttpStatusCode.BadRequest,
-        }
+      return NextResponse.json(
+        { message: "Comic ID is required" },
+        { status: HttpStatusCode.BadRequest }
       );
-
     const chapterData = await req.json();
 
     const newChapter = await chapterAction.createChapter(auth.user.id, {
       ...chapterData,
       comicId,
     });
-    return new NextResponse(JSON.stringify(newChapter), {
+    return NextResponse.json(newChapter, {
       status: HttpStatusCode.Created,
     });
   });

@@ -42,12 +42,7 @@ export class AuthQuery {
         title: "Xác thực email thành công",
         description: "Bạn đã có thể đăng nhập vào hệ thống",
       });
-    } else {
-      notify({
-        type: "error",
-        title: "Mã OTP không đúng",
-        description: "Vui lòng kiểm tra lại mã OTP",
-      });
+      return response.data;
     }
   }
 

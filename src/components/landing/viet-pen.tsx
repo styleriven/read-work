@@ -31,7 +31,7 @@ export default function VietPen() {
   return (
     <div className="w-full">
       <p className="flex p-4 ml-10">Hồn Bút Việt</p>
-      <div className="flex justify-center border p-4 rounded-lg bg-gradient-to-b shadow-lg mx-10 bg-gray-100/60">
+      <div className="flex justify-center border p-4 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100/60">
         <LastResort
           title="Tinh Tú Xuất Thế"
           icon={<StarOutlined className="w-3 h-3" />}

@@ -39,7 +39,7 @@ export default function New() {
   ]);
 
   return (
-    <div className="w-1/4  ml-10">
+    <div className="md:w-1/4 w-full">
       <div className="flex justify-between p-3">
         <div className="flex items-center">
           <NotificationOutlined />

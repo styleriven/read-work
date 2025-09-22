@@ -134,8 +134,6 @@ export default function UserAuthForm({
         );
         router.push("/register/otp");
       }
-
-      // router.push(callbackUrl);
     } catch (error) {
       if (!isLogin) {
         notify({
@@ -156,7 +154,7 @@ export default function UserAuthForm({
   }
 
   return (
-    <div className="min-h-screen from-slate-900 to-slate-900 flex items-center justify-center p-4">
+    <div className=" from-slate-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md ">
         <div className="bg-white backdrop-blur-xl rounded-3xl p-8  border shadow-2xl">
           <div className="text-center mb-8">
@@ -185,6 +183,11 @@ export default function UserAuthForm({
                         : "border-white/20 hover:border-white/40"
                     }`}
                   {...register("email")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubmit(onSubmit)();
+                    }
+                  }}
                 />
               </div>
               {errors.email && (
@@ -215,6 +218,11 @@ export default function UserAuthForm({
                         : "border-white/20 hover:border-white/40"
                     }`}
                   {...register("password")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubmit(onSubmit)();
+                    }
+                  }}
                 />
                 <button
                   type="button"
@@ -261,6 +269,11 @@ export default function UserAuthForm({
                         : "border-white/20 hover:border-white/40"
                     }`}
                     {...register("confirmPassword")}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSubmit(onSubmit)();
+                      }
+                    }}
                   />
                   <button
                     type="button"

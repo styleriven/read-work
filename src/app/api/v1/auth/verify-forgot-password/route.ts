@@ -7,23 +7,19 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const { code, email } = await req.json();
     if (!code || !email) {
-      return new NextResponse(
-        JSON.stringify({ message: "Code and email are required" }),
+      return NextResponse.json(
+        { message: "Code and email are required" },
         { status: HttpStatusCode.BadRequest }
       );
     }
 
     const [isValid, user] = await authAction.verifyForgotPassword(email, code);
     if (!isValid) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid or expired code" }),
-        {
-          status: HttpStatusCode.BadRequest,
-        }
+      return NextResponse.json(
+        { message: "Invalid or expired code" },
+        { status: HttpStatusCode.BadRequest }
       );
     }
-    return new NextResponse(JSON.stringify({ message: "ok" }), {
-      status: HttpStatusCode.Ok,
-    });
+    return NextResponse.json({ message: "ok" }, { status: HttpStatusCode.Ok });
   });
 };

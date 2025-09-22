@@ -8,20 +8,21 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
     const { old_password, new_password } = await req.json();
     if (!old_password || !new_password) {
-      return new NextResponse(
-        JSON.stringify({ message: "Old and new passwords are required" }),
+      return NextResponse.json(
+        { message: "Old and new passwords are required" },
         { status: HttpStatusCode.BadRequest }
       );
     }
     await authAction.changePassword(auth.user, old_password, new_password);
-    return new NextResponse(
-      JSON.stringify({ message: "Password changed successfully" }),
+    return NextResponse.json(
+      { message: "Password changed successfully" },
       {
         status: HttpStatusCode.Ok,
       }

@@ -14,15 +14,16 @@ export const PUT = async (
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
 
     const { comicId, chapterId } = await context.params;
     if (!comicId || !chapterId)
-      return new NextResponse(
-        JSON.stringify({ message: "Comic ID and Chapter ID are required" }),
+      return NextResponse.json(
+        { message: "Comic ID and Chapter ID are required" },
         {
           status: HttpStatusCode.BadRequest,
         }
@@ -30,16 +31,19 @@ export const PUT = async (
 
     const chapterData = await req.json();
     if (!chapterData)
-      return new NextResponse(JSON.stringify({ message: "No data provided" }), {
-        status: HttpStatusCode.BadRequest,
-      });
+      return NextResponse.json(
+        { message: "No data provided" },
+        {
+          status: HttpStatusCode.BadRequest,
+        }
+      );
 
     const updatedChapter = await chapterAction.updateChapter(
       auth.user.id,
       chapterId,
       chapterData
     );
-    return new NextResponse(JSON.stringify(updatedChapter), {
+    return NextResponse.json(updatedChapter, {
       status: HttpStatusCode.Ok,
     });
   });
@@ -54,22 +58,22 @@ export const GET = async (
   return handleApiRequest(async () => {
     const { comicId, chapterId } = await context.params;
     if (!comicId || !chapterId)
-      return new NextResponse(
-        JSON.stringify({ message: "Comic ID and Chapter ID are required" }),
+      return NextResponse.json(
+        { message: "Comic ID and Chapter ID are required" },
         {
           status: HttpStatusCode.BadRequest,
         }
       );
     const data = await chapterAction.getChapterById(comicId, chapterId);
     if (!data?.chapter) {
-      return new NextResponse(
-        JSON.stringify({ message: "Chapter not found" }),
+      return NextResponse.json(
+        { message: "Chapter not found" },
         {
           status: HttpStatusCode.NotFound,
         }
       );
     }
-    return new NextResponse(JSON.stringify(data), {
+    return NextResponse.json(data, {
       status: HttpStatusCode.Ok,
     });
   });

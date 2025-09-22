@@ -8,27 +8,24 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
 
     const { refresh_token } = await req.json();
     if (!refresh_token) {
-      return new NextResponse(
-        JSON.stringify({ message: "Missing refresh token" }),
-        {
-          status: HttpStatusCode.BadRequest,
-        }
+      return NextResponse.json(
+        { message: "Missing refresh token" },
+        { status: HttpStatusCode.BadRequest }
       );
     }
 
     await authAction.logout(refresh_token);
-    return new NextResponse(
-      JSON.stringify({ message: "Logged out successfully" }),
-      {
-        status: HttpStatusCode.Ok,
-      }
+    return NextResponse.json(
+      { message: "Logged out successfully" },
+      { status: HttpStatusCode.Ok }
     );
   });
 };

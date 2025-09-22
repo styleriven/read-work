@@ -2,6 +2,7 @@ import authAction from "@/lib/server/action/auth-action";
 import tokenAction from "@/lib/server/action/token-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { HttpStatusCode } from "axios";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const POST = async (request: Request): Promise<NextResponse> => {
@@ -9,8 +10,8 @@ export const POST = async (request: Request): Promise<NextResponse> => {
     const { email, password } = await request.json();
 
     if (!email || !password) {
-      return new NextResponse(
-        JSON.stringify({ message: "Email and password are required" }),
+      return NextResponse.json(
+        { message: "Email and password are required" },
         {
           status: HttpStatusCode.BadRequest,
           headers: { "Content-Type": "application/json" },
@@ -23,8 +24,8 @@ export const POST = async (request: Request): Promise<NextResponse> => {
       password
     );
     if (!user) {
-      return new NextResponse(
-        JSON.stringify({ message: "Invalid email or password" }),
+      return NextResponse.json(
+        { message: "Invalid email or password" },
         {
           status: HttpStatusCode.BadRequest,
           headers: { "Content-Type": "application/json" },
@@ -33,9 +34,12 @@ export const POST = async (request: Request): Promise<NextResponse> => {
     }
 
     const tokens = await tokenAction.generateAuthTokens(user);
-    return new NextResponse(JSON.stringify({ user, tokens }), {
-      status: HttpStatusCode.Ok,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      { user, tokens },
+      {
+        status: HttpStatusCode.Ok,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   });
 };

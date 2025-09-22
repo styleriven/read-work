@@ -20,7 +20,13 @@ export default function Panel() {
       id: 3,
       name: "huy",
       link: "",
-      img: "https://i.ibb.co/7W8m0wz/ta-co-the-lam-gi-trong-the-gioi-nay.png",
+      img: "https://i.ibb.co/4nfbsHDZ/bua-yeu-mat-xoai-duoi-chan-nui-cam.png",
+    },
+    {
+      id: 4,
+      name: "huy",
+      link: "",
+      img: "https://i.ibb.co/M528jY9d/canh-mai-trang-trong-tuyet.png",
     },
   ]);
 
@@ -35,7 +41,7 @@ export default function Panel() {
   }
 
   return (
-    <div className="w-1/2 mx-10">
+    <div className="md:w-1/2 w-full">
       <div className="relative group">
         <h2 className="text-center mb-2">{panels[selectedPanel].name}</h2>
 
@@ -57,7 +63,7 @@ export default function Panel() {
         <button
           onClick={PrevPanel}
           className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
-               opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              md:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity duration-300"
         >
           ❮
         </button>
@@ -65,7 +71,7 @@ export default function Panel() {
         <button
           onClick={NextPanel}
           className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
-               opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                md:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity duration-300"
         >
           ❯
         </button>

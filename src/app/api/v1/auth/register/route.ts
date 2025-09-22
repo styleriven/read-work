@@ -13,8 +13,8 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     const { email, password } = await req.json();
 
     if (!email || !password) {
-      return new NextResponse(
-        JSON.stringify({ message: "Email and password are required" }),
+      return NextResponse.json(
+        { message: "Email and password are required" },
         {
           status: HttpStatusCode.BadRequest,
         }
@@ -49,9 +49,12 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     const tokens = await TokenAction.generateAuthTokens(user);
     await AuthAction.sendVerifyEmail(user);
 
-    return new NextResponse(JSON.stringify({ user, tokens }), {
-      status: HttpStatusCode.Ok,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      { user, tokens },
+      {
+        status: HttpStatusCode.Ok,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   });
 };

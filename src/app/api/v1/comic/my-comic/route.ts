@@ -8,9 +8,10 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -26,7 +27,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
       limit
     );
 
-    return new NextResponse(JSON.stringify(comics), {
+    return NextResponse.json(comics, {
       status: HttpStatusCode.Ok,
     });
   });

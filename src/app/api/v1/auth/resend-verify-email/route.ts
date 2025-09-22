@@ -9,14 +9,15 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([UserRoles.User])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
 
     authAction.sendVerifyEmail(auth.user);
-    return new NextResponse(
-      JSON.stringify({ message: "Verification email sent" }),
+    return NextResponse.json(
+      { message: "Verification email sent" },
       {
         status: HttpStatusCode.Ok,
       }

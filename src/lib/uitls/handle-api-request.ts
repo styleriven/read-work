@@ -13,14 +13,17 @@ export async function handleApiRequest(
     return response;
   } catch (error: any) {
     if (error instanceof ApiError) {
-      return new NextResponse(JSON.stringify({ message: error.message }), {
-        status: error.statusCode,
-        headers: { "Content-Type": "application/json" },
-      });
+      return NextResponse.json(
+        { message: error.message },
+        {
+          status: error.statusCode,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
-    return new NextResponse(
-      JSON.stringify({ message: "Internal server error" }),
+    return NextResponse.json(
+      { message: "Internal server error" },
       {
         status: HttpStatusCode.InternalServerError,
         headers: { "Content-Type": "application/json" },

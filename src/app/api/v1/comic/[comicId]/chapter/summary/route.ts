@@ -1,3 +1,4 @@
+import page from "@/app/page";
 import { chapterAction } from "@/lib/server/action/chapter-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { HttpStatusCode } from "axios";
@@ -10,8 +11,8 @@ export const GET = async (
   return handleApiRequest(async () => {
     const { comicId } = await context.params;
     if (!comicId)
-      return new NextResponse(
-        JSON.stringify({ message: "Comic ID is required" }),
+      return NextResponse.json(
+        { message: "Comic ID is required" },
         { status: HttpStatusCode.BadRequest }
       );
 
@@ -21,9 +22,10 @@ export const GET = async (
       const summary = await chapterAction.getChapterSummaryByComicIdFull(
         comicId
       );
-      return new NextResponse(JSON.stringify({ data: summary }), {
-        status: HttpStatusCode.Ok,
-      });
+      return NextResponse.json(
+        { data: summary },
+        { status: HttpStatusCode.Ok }
+      );
     } else {
       const q = searchParams.get("q") || undefined;
       const pageParam = searchParams.get("page");
@@ -36,7 +38,7 @@ export const GET = async (
         page,
         limit
       );
-      return new NextResponse(JSON.stringify(summary), {
+      return NextResponse.json(summary, {
         status: HttpStatusCode.Ok,
       });
     }

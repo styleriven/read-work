@@ -51,11 +51,13 @@ export default function LastResort({
   }
 
   if (!comics || comics.length === 0) {
-    return <div className={`w-1/4 ${className}`}>Không có dữ liệu</div>;
+    return (
+      <div className={`md:w-1/4 w-full ${className}`}>Không có dữ liệu</div>
+    );
   }
 
   return (
-    <div className={`w-1/4 ${className}`} {...props}>
+    <div className={`md:w-1/4 w-full  ${className}`} {...props}>
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200">
         <div className="text-gray-600">{icon}</div>
         <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
@@ -88,7 +90,7 @@ export default function LastResort({
 
       {/* Comic List */}
       <div className="space-y-1">
-        {comics.slice(1).map((comic) => (
+        {comics.slice(1)?.map((comic) => (
           <div
             key={comic._id}
             className="flex items-center justify-between group hover:bg-gray-50 -mx-2 px-2 py-2 rounded transition-colors cursor-pointer border-t border-gray-100"

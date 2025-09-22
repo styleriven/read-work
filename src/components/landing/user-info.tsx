@@ -9,7 +9,7 @@ import {
 
 export default function UserInfo() {
   return (
-    <div className="w-1/4 mr-10 ">
+    <div className="md:w-1/4 w-full flex flex-col justify-center gap-2 items-center h-full">
       <div className=" rounded-2xl  p-6 ">
         <div className="text-center">
           <button className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 shadow-lg transform hover:scale-105">
@@ -20,13 +20,13 @@ export default function UserInfo() {
       </div>
 
       {/* Stats Card */}
-      <div className="p-3">
-        <ul className="flex justify-between gap-4">
-          <li>
-            <div className="p-3 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
+      <div className="overflow-y-auto w-full">
+        <ul className="flex justify-around gap-4">
+          <li className="p-2">
+            <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <div
                 className="absolute -top-2 -right-2 bg-[#f14668] text-white text-xs font-medium 
-                  w-6 h-6 flex items-center justify-center rounded-full shadow-md"
+                  w-6 h-6 flex items-center justify-center rounded-full shadow-md z-10"
               >
                 0
               </div>
@@ -34,8 +34,8 @@ export default function UserInfo() {
             </div>
             <div className="text-xs mt-1 px-1">Đã Đọc</div>
           </li>
-          <li>
-            <div className="p-3 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
+          <li className="p-2">
+            <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <div
                 className="absolute -top-2 -right-2 bg-[#f14668] text-white text-xs font-medium 
                   w-6 h-6 flex items-center justify-center rounded-full shadow-md"
@@ -46,20 +46,20 @@ export default function UserInfo() {
             </div>
             <div className="text-xs mt-1">Bookmark</div>
           </li>
-          <li>
-            <div className="p-3 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
+          <li className="p-2">
+            <div className="flex items-center justify-center w-10 h-10  bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <BellOutlined />
             </div>
             <div className="text-xs mt-1">Hệ Thống</div>
           </li>
-          <li>
-            <div className="p-3 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
+          <li className="p-2">
+            <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <UserOutlined />
             </div>
             <div className="text-xs mt-1">Tài Khoản</div>
           </li>
-          <li>
-            <div className="p-3 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
+          <li className="p-2">
+            <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <UndoOutlined />
             </div>
             <div className="text-xs mt-1 px-1">Hồi đáp</div>

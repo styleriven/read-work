@@ -1,6 +1,7 @@
 import comicAction from "@/lib/server/action/comic-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { withAuth } from "@/middleware/auth";
+import context from "antd/es/app/context";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,8 +12,8 @@ export const GET = async (
   return handleApiRequest(async () => {
     const { comicId } = await context.params;
     if (!comicId)
-      return new NextResponse(
-        JSON.stringify({ message: "Comic ID is required" }),
+      return NextResponse.json(
+        { message: "Comic ID is required" },
         {
           status: HttpStatusCode.BadRequest,
         }
@@ -20,7 +21,7 @@ export const GET = async (
 
     const comic = await comicAction.getComic(comicId);
 
-    return new NextResponse(JSON.stringify(comic), {
+    return NextResponse.json(comic, {
       status: HttpStatusCode.Ok,
     });
   });
@@ -34,18 +35,17 @@ export const PATCH = async (
     const auth = await withAuth([])(req);
 
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
 
     const { comicId } = await context.params;
     if (!comicId)
-      return new NextResponse(
-        JSON.stringify({ message: "Comic ID is required" }),
-        {
-          status: HttpStatusCode.BadRequest,
-        }
+      return NextResponse.json(
+        { message: "Comic ID is required" },
+        { status: HttpStatusCode.BadRequest }
       );
 
     const { title, authorName, description, category, type, coverImage } =
@@ -60,8 +60,8 @@ export const PATCH = async (
     };
 
     if (Object.keys(updatedComic).length === 0) {
-      return new NextResponse(
-        JSON.stringify({ message: "No fields to update" }),
+      return NextResponse.json(
+        { message: "No fields to update" },
         { status: HttpStatusCode.BadRequest }
       );
     }
@@ -72,12 +72,15 @@ export const PATCH = async (
       updatedComic
     );
     if (!result) {
-      return new NextResponse(JSON.stringify({ message: "Comic not found" }), {
-        status: HttpStatusCode.NotFound,
-      });
+      return NextResponse.json(
+        { message: "Comic not found" },
+        {
+          status: HttpStatusCode.NotFound,
+        }
+      );
     }
 
-    return new NextResponse(JSON.stringify(result), {
+    return NextResponse.json(result, {
       status: HttpStatusCode.Ok,
     });
   });

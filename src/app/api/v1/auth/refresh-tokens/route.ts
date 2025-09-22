@@ -8,16 +8,19 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const { refresh_token } = await req.json();
     if (!refresh_token) {
-      return new NextResponse(
-        JSON.stringify({ message: "Refresh token is required" }),
+      return NextResponse.json(
+        { message: "Refresh token is required" },
         { status: HttpStatusCode.BadRequest }
       );
     }
 
     const tokens = await AuthAction.refreshAuth(refresh_token);
-    return new NextResponse(JSON.stringify({ tokens }), {
-      status: HttpStatusCode.Ok,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      { tokens },
+      {
+        status: HttpStatusCode.Ok,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   });
 };

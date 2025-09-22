@@ -6,10 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const categories = await categoryAction.GetALL();
-    return new NextResponse(
-      JSON.stringify({
+    return NextResponse.json(
+      {
         categories,
-      }),
+      },
       {
         status: HttpStatusCode.Ok,
       }

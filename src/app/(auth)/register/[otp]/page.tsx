@@ -4,6 +4,7 @@ import Loading from "@/components/ui/loading";
 import { notify } from "@/components/ui/notify";
 import { AuthQuery } from "@/lib/server/queries/auth-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -110,8 +111,12 @@ export default function RegisterOtp() {
     if (loading) return;
     setLoading(true);
     try {
-      await AuthQuery.verifyEmail(values.otp, token);
-      router.push("/login");
+      const { user, tokens } = await AuthQuery.verifyEmail(values.otp, token);
+      signIn("token", {
+        user: JSON.stringify(user),
+        tokens: JSON.stringify(token),
+        redirect: false,
+      });
     } catch (error) {
       notify({
         type: "error",

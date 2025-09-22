@@ -112,13 +112,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         page,
         limit,
       });
-      return new NextResponse(JSON.stringify(data), {
+      return NextResponse.json(data, {
         status: HttpStatusCode.Ok,
       });
     } catch (error) {
       console.error("Search API error:", error);
-      return new NextResponse(
-        JSON.stringify({ message: "Internal server error" }),
+      return NextResponse.json(
+        { message: "Internal server error" },
         {
           status: HttpStatusCode.InternalServerError,
         }
@@ -149,8 +149,11 @@ export async function POST(request: NextRequest) {
         { value: "title", label: "Tên A-Z" },
       ],
     };
-    return new NextResponse(JSON.stringify({ filterOptions }), {
-      status: HttpStatusCode.Ok,
-    });
+    return NextResponse.json(
+      { filterOptions },
+      {
+        status: HttpStatusCode.Ok,
+      }
+    );
   });
 }

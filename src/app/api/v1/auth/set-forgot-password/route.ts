@@ -7,17 +7,17 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const { code, email, new_password } = await req.json();
     if (!code || !email || !new_password) {
-      return new NextResponse(
-        JSON.stringify({
+      return NextResponse.json(
+        {
           message: "Code, email, and new password are required",
-        }),
+        },
         { status: HttpStatusCode.BadRequest }
       );
     }
 
     await authAction.forgotPassword(code, email, new_password);
-    return new NextResponse(
-      JSON.stringify({ message: "Password updated successfully" }),
+    return NextResponse.json(
+      { message: "Password updated successfully" },
       {
         status: HttpStatusCode.Ok,
       }

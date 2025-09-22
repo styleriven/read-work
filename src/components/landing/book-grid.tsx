@@ -27,16 +27,16 @@ export default function BookGrid() {
 
   if (isLoading) {
     return (
-      <div className="w-1/2 flex justify-center items-center border p-4 rounded-lg bg-gradient-to-b shadow-lg mx-10 bg-gray-100/60">
+      <div className="md:w-1/2 w-full flex justify-center items-center border p-4 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100/60">
         <Loading styleIcon={{ fontSize: "5rem" }} />
       </div>
     );
   }
 
   return (
-    <div className="w-1/2 flex justify-center border p-4 rounded-lg bg-gradient-to-b shadow-lg mx-10 bg-gray-100/60">
-      <div className="grid grid-cols-6 gap-4 ">
-        {comics.map((comic) => (
+    <div className="md:w-1/2 min-h-96 w-full flex justify-center border p-4 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100/60">
+      <div className="grid md:grid-cols-6 grid-cols-4 gap-4 ">
+        {comics?.map((comic) => (
           <ComicCardVertical
             key={comic.id}
             id={comic.id}

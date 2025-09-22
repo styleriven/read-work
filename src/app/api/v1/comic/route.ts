@@ -3,24 +3,21 @@ import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest): Promise<NextResponse> => {
+export async function GET(req: NextRequest) {
   return handleApiRequest(async () => {
     const { searchParams } = new URL(req.url);
-    const numberComic = searchParams.get("numberComic") || undefined;
-    if (numberComic) {
-      const comics = await comicAction.getRandomComic(
-        numberComic as unknown as number
-      );
-      return new NextResponse(JSON.stringify(comics), {
-        status: HttpStatusCode.Ok,
-      });
-    } else {
-      return new NextResponse(
-        JSON.stringify({ message: "numberComic is required" }),
-        {
-          status: HttpStatusCode.BadRequest,
-        }
+    const numberComic = searchParams.get("numberComic");
+
+    if (!numberComic) {
+      return NextResponse.json(
+        { message: "numberComic is required" },
+        { status: HttpStatusCode.BadRequest }
       );
     }
+
+    const comics = await comicAction.getRandomComic(Number(numberComic));
+    return NextResponse.json(comics, {
+      status: HttpStatusCode.Ok,
+    });
   });
-};
+}

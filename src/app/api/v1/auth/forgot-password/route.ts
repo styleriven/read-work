@@ -8,8 +8,8 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const { email } = await req.json();
     if (!email) {
-      return new NextResponse(
-        JSON.stringify({ message: "Email is required" }),
+      return NextResponse.json(
+        { message: "Email is required" },
         {
           status: HttpStatusCode.BadRequest,
         }
@@ -18,14 +18,15 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 
     const user = await userAction.getUserByEmail(email, true);
     if (!user) {
-      return new NextResponse(JSON.stringify({ message: "User not found" }), {
-        status: HttpStatusCode.NotFound,
-      });
+      return NextResponse.json(
+        { message: "User not found" },
+        { status: HttpStatusCode.NotFound }
+      );
     }
 
     await authAction.sendPasswordResetEmail(user);
-    return new NextResponse(
-      JSON.stringify({ message: "Password reset email sent" }),
+    return NextResponse.json(
+      { message: "Password reset email sent" },
       { status: HttpStatusCode.Ok }
     );
   });

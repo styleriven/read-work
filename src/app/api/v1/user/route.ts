@@ -8,9 +8,10 @@ export const PATCH = async (req: NextRequest): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
     if ("error" in auth) {
-      return new NextResponse(JSON.stringify({ message: auth.error }), {
-        status: auth.status,
-      });
+      return NextResponse.json(
+        { message: auth.error },
+        { status: auth.status }
+      );
     }
 
     const { user_name, avatar, bio, preferences, display_name } =
@@ -23,8 +24,8 @@ export const PATCH = async (req: NextRequest): Promise<NextResponse> => {
       ...(display_name && { displayName: display_name }),
     };
     if (Object.keys(updatedUser).length === 0) {
-      return new NextResponse(
-        JSON.stringify({ message: "No fields to update" }),
+      return NextResponse.json(
+        { message: "No fields to update" },
         {
           status: HttpStatusCode.BadRequest,
         }
@@ -33,12 +34,11 @@ export const PATCH = async (req: NextRequest): Promise<NextResponse> => {
 
     const result = await userAction.updateUser(auth.user!.id, updatedUser);
     if (!result) {
-      return new NextResponse(JSON.stringify({ message: "User not found" }), {
-        status: HttpStatusCode.NotFound,
-      });
+      return NextResponse.json(
+        { message: "User not found" },
+        { status: HttpStatusCode.NotFound }
+      );
     }
-    return new NextResponse(JSON.stringify({ message: true }), {
-      status: HttpStatusCode.Ok,
-    });
+    return NextResponse.json({ message: true }, { status: HttpStatusCode.Ok });
   });
 };
