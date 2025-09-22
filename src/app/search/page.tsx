@@ -7,7 +7,6 @@ import SearchPagination from "./components/SearchPagination";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
 import { SearchFilterOptions, SearchPageProps } from "@/types/search";
-import console from "console";
 
 export async function generateMetadata({
   searchParams,

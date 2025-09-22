@@ -114,9 +114,10 @@ export default function RegisterOtp() {
       const { user, tokens } = await AuthQuery.verifyEmail(values.otp, token);
       signIn("token", {
         user: JSON.stringify(user),
-        tokens: JSON.stringify(token),
+        tokens: JSON.stringify(tokens),
         redirect: false,
       });
+      router.push("/");
     } catch (error) {
       notify({
         type: "error",

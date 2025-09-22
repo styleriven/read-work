@@ -5,7 +5,6 @@ import userAction from "@/lib/server/action/user-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { withAuth } from "@/middleware/auth";
 import { HttpStatusCode } from "axios";
-import { code } from "framer-motion/dist/m";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = async (req: NextRequest): Promise<NextResponse> => {
@@ -40,7 +39,18 @@ export const PATCH = async (req: NextRequest): Promise<NextResponse> => {
     }
 
     const user = await userAction.getUserById(userId);
-    const tokens = await tokenAction.generateAuthTokens(auth.user);
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not found" },
+        { status: HttpStatusCode.NotFound }
+      );
+    }
+
+    const date = new Date();
+    await userAction.update(user.id, { lastLoginAt: date });
+    user.lastLoginAt = date;
+
+    const tokens = await tokenAction.generateAuthTokens(user);
     return NextResponse.json(
       { user, tokens },
       {

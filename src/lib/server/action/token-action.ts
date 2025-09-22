@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import { IToken } from "@/types/token";
 import { IUser } from "@models/interfaces/i-user";
 import tokenRepository from "@models/repositories/token-repository";
-import UserRoles from "@/enums/Role";
 class TokenAction {
   async generateAuthTokens(
     user: IUser

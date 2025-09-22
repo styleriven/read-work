@@ -95,6 +95,10 @@ class AuthAction {
           "Incorrect email or password"
         );
       }
+      
+      const date = new Date();
+      await userAction.update(user.id, { lastLoginAt: date });
+      user.lastLoginAt = date;
       return user;
     } catch (error) {
       console.error("Error in loginUserWithEmailAndPassword:", error);

@@ -3,7 +3,6 @@ import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { withAuth } from "@/middleware/auth";
 import context from "antd/es/app/context";
 import { HttpStatusCode } from "axios";
-import console from "console";
 import { data } from "framer-motion/dist/m";
 import { NextRequest, NextResponse } from "next/server";
 
