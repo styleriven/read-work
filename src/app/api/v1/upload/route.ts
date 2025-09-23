@@ -34,7 +34,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     counter++;
   }
 
-  fs.writeFileSync(filePath, buffer);
+  fs.writeFileSync(filePath, new Uint8Array(buffer));
 
   return NextResponse.json(
     { url: `/uploads/${date}/${fileName}` },

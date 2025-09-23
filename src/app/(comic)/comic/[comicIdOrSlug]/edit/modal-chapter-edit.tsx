@@ -127,13 +127,11 @@ export default function ModalChapterEdit({
           rules={[
             { required: true, message: "Vui lòng nhập nội dung chapter" },
             { min: 3, message: "Nội dung phải có ít nhất 3 ký tự" },
-            { max: 8000, message: "Nội dung không quá 8000 ký tự" },
           ]}
         >
           <Input.TextArea
             placeholder="Nhập nội dung chapter..."
             rows={4}
-            maxLength={8000}
             showCount
           />
         </Form.Item>

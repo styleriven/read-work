@@ -1,7 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import { ILike } from "../interfaces/i-like";
-import { v4 } from "uuid";
-import { ref } from "process";
 
 const likeSchema = new Schema<ILike>(
   {
