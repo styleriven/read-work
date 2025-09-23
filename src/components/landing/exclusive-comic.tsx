@@ -38,13 +38,13 @@ export default function ExclusiveComic() {
 
   return (
     <div className="md:w-1/4 w-full flex justify-center items-center hover:scale-[1.02] transition text-lg">
-      <div className="flex flex-col justify-between w-fit h-full border p-5 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100">
+      <div className="flex flex-col justify-between h-full border p-5 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100">
         <h2 className="flex items-center gap-2 font-semibold">
           <BgColorsOutlined />
           Độc quyền
         </h2>
 
-        <div>
+        <div className="w-[200px]">
           {comics && comics.length > 0 && (
             <>
               <Image
@@ -55,7 +55,9 @@ export default function ExclusiveComic() {
                 title={comics[currentComic].title}
                 className="object-contain cursor-pointer"
               />
-              <span>{comics[currentComic].title}</span>
+              <p className="truncate w-full" title={comics[currentComic].title}>
+                {comics[currentComic].title}
+              </p>
             </>
           )}
         </div>
