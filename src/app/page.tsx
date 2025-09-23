@@ -6,9 +6,19 @@ import New from "@/components/landing/new";
 import Panel from "@/components/landing/panel";
 import UserInfo from "@/components/landing/user-info";
 import VietPen from "@/components/landing/viet-pen";
-import LayoutMain from "@/components/Layout/layout-main";
 import { RocketOutlined } from "@ant-design/icons";
-import { section } from "framer-motion/dist/m";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Đọc Truyện Online Miễn Phí - Read World | Kho Truyện Hay Nhất",
+  description:
+    "Khám phá kho tàng truyện online miễn phí tại Read World với hàng nghìn đầu truyện tranh, tiểu thuyết, light novel được cập nhật hàng ngày. Giao diện đẹp, đọc mượt mà.",
+  openGraph: {
+    title: "Đọc Truyện Online Miễn Phí - Read World",
+    description:
+      "Khám phá kho tàng truyện online miễn phí với hàng nghìn đầu truyện hay nhất",
+  },
+};
 
 export default async function Home() {
   return (
