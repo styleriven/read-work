@@ -135,7 +135,7 @@ export default function EditComicPage() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        if (comic?.authorId !== user.id) {
+        if (!comic?.authorId.includes(user.id)) {
           setIsAuthor(false);
           notify({
             type: "error",

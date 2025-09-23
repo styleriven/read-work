@@ -27,7 +27,7 @@ const comicSchema = new Schema<IComic>(
     },
     coverImage: String,
     authorId: {
-      type: String,
+      type: [String],
       ref: "User",
       required: true,
     },

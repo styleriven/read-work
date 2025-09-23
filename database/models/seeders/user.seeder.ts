@@ -15,6 +15,8 @@ const seedUsers = async () => {
       );
     }
   } else {
+    const fiftyDaysAgo = new Date();
+    fiftyDaysAgo.setDate(fiftyDaysAgo.getDate() - 50);
     const adminUser = new UserModel({
       _id: v4(),
       userName: "Admin User",
@@ -22,6 +24,7 @@ const seedUsers = async () => {
       password: await hashPassword("admin123"),
       role: UserRoles.Admin,
       isVerified: true,
+      createdAt: fiftyDaysAgo,
     });
     const adminUserDetail = new UserDetailModel({
       _id: v4(),

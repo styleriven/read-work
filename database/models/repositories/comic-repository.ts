@@ -12,7 +12,7 @@ class ComicRepository extends BaseRepository<IComic> {
     const { page = 1, limit = 10 } = pagination;
     const totalCount = await this.model
       .countDocuments({
-        authorId,
+        authorId: { $in: [authorId] },
         ...(q ? { title: { $regex: q, $options: "i" } } : {}),
         deletedAt: null,
       })
@@ -21,7 +21,7 @@ class ComicRepository extends BaseRepository<IComic> {
 
     const data = await this.model
       .find({
-        authorId,
+        authorId: { $in: [authorId] },
         ...(q ? { title: { $regex: q, $options: "i" } } : {}),
         deletedAt: null,
       })
@@ -75,7 +75,7 @@ class ComicRepository extends BaseRepository<IComic> {
     return Boolean(
       await this.model.exists({
         _id: comicId,
-        authorId: userId,
+        authorId: { $in: [userId] },
         deletedAt: null,
       })
     );

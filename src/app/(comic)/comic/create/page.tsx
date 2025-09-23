@@ -38,8 +38,6 @@ import { CategoryQuery } from "@/lib/server/queries/category-query";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
 import { REQUEST_URLS_V1 } from "@/config/request-urls";
 import { useRouter } from "next/navigation";
-import { slugify } from "@/lib/uitls/utils";
-
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
 
@@ -119,7 +117,9 @@ export default function CreateComicPage() {
       const data = await ComicQuery.createComic(formData);
       // Reset form
       form.resetFields();
+
       setImageUrl(undefined);
+      router.push(`/comic/${data.slug}/edit`);
     } catch (err) {
       console.error(err);
       notify({

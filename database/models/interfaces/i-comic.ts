@@ -5,7 +5,7 @@ export interface IComic extends IBase {
   slug: string;
   description: string;
   coverImage?: string;
-  authorId: string;
+  authorId: string[];
   authorName: string;
   artist?: string;
   categoryId: string[];

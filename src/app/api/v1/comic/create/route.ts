@@ -29,16 +29,15 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
         { status: HttpStatusCode.BadRequest }
       );
     }
-    const createdComic = comicAction.createComic({
+    const createdComic = await comicAction.createComic({
       title,
       authorName,
       description,
       type,
       categoryId: category,
       coverImage,
-      authorId: auth.user!.id,
+      authorId: [auth.user!.id],
     });
-
     return NextResponse.json(createdComic, {
       status: HttpStatusCode.Ok,
     });

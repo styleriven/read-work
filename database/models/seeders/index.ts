@@ -6,9 +6,9 @@ import addSlugChapter from "./addSlugChapter";
 const runSeeders = async () => {
   console.log("Running seeders...");
 
-  // await seedUsers();
-  // await seedCategory();
-  // await addSlugComic();
+  await seedUsers();
+  await seedCategory();
+  await addSlugComic();
   await addSlugChapter();
   console.log("All seeders completed!");
 };

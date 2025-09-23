@@ -38,7 +38,7 @@ const chapterSchema = new Schema<IChapter>(
       default: null,
     },
     authorId: {
-      type: String,
+      type: [String],
       ref: "User",
       required: true,
     },

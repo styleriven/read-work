@@ -272,7 +272,7 @@ export default function ComicDetailClient({
           <div className="flex md:flex-row flex-col items-stretch gap-6">
             {/* Cover Image */}
             <div className="flex-shrink-0">
-              {user?.id === comicData?.authorId ? (
+              {comicData?.authorId.includes(user?.id) ? (
                 <Upload
                   name="file"
                   listType="picture-card"
@@ -314,7 +314,7 @@ export default function ComicDetailClient({
                   <PlayCircleOutlined className="w-4 h-4" />
                   Đọc Truyện
                 </button>
-                {user?.id === comicData?.authorId && (
+                {comicData?.authorId.includes(user?.id) && (
                   <Link href={`/comic/${comicData.slug}/edit`} passHref>
                     <button className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2">
                       Chỉnh Sửa

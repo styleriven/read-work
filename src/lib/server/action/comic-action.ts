@@ -68,7 +68,7 @@ class ComicAction {
     updateData: Partial<IComic>
   ): Promise<IComic | null> {
     try {
-      const filter = { authorId: userId };
+      const filter = { authorId: [userId] };
       if (updateData && updateData.title) {
         updateData.slug =
           slugify(updateData.title) + "-" + comicIdOrSlug.slice(0, 8);
