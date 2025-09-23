@@ -51,10 +51,6 @@ import ModalChapterEdit from "./modal-chapter-edit";
 import dayjs from "dayjs";
 
 const { Title, Text, Paragraph } = Typography;
-console.log("Text:", Text);
-console.log("Paragraph:", Paragraph);
-console.log("Title:", Title);
-console.log("Typography:", Typography);
 const { TextArea } = Input;
 const { confirm } = Modal;
 
@@ -69,7 +65,7 @@ interface ComicFormValues {
 
 export default function EditComicPage() {
   const params = useParams();
-  const comicId = params.comicId as string;
+  const comicIdOrSlug = params.comicIdOrSlug as string;
   const router = useRouter();
 
   const [form] = Form.useForm<ComicFormValues>();
@@ -105,7 +101,7 @@ export default function EditComicPage() {
     const fetchData = async () => {
       try {
         const [comicData, categoriesData] = await Promise.all([
-          ComicQuery.getComicById(comicId),
+          ComicQuery.getComicByIdOrSlug(comicIdOrSlug),
           CategoryQuery.getAll(),
         ]);
 
@@ -128,10 +124,10 @@ export default function EditComicPage() {
       }
     };
 
-    if (comicId) {
+    if (comicIdOrSlug) {
       fetchData();
     }
-  }, [comicId]);
+  }, [comicIdOrSlug]);
 
   useEffect(() => {
     if (!user || status === "loading" || !comic) return;
@@ -182,7 +178,7 @@ export default function EditComicPage() {
     const fetchChapters = async () => {
       try {
         const response = await ChapterQuery.getChaptersByComicId(
-          comicId,
+          comic?.id,
           "",
           currentPage,
           pageSize
@@ -194,10 +190,10 @@ export default function EditComicPage() {
       }
     };
 
-    if (comicId && isAuthor) {
+    if (comic && isAuthor) {
       fetchChapters();
     }
-  }, [comicId, currentPage, pageSize, isAuthor]);
+  }, [comic, currentPage, pageSize, isAuthor]);
 
   // Upload handlers
   const beforeUpload = (file: File) => {
@@ -271,8 +267,8 @@ export default function EditComicPage() {
         coverImage: imageUrl,
       };
 
-      await ComicQuery.updateComic(comicId, formData);
-
+      const data = await ComicQuery.updateComic(comic?.id, formData);
+      setComic(data);
       notify({
         type: "success",
         title: "Cập nhật thành công",
@@ -283,7 +279,7 @@ export default function EditComicPage() {
 
       // Navigate back after short delay
       setTimeout(() => {
-        router.push(`/comic/${comicId}`);
+        router.push(`/comic/${comic?.slug}`);
       }, 1000);
     } catch (err) {
       console.error("Update error:", err);
@@ -307,7 +303,7 @@ export default function EditComicPage() {
       title: "Bạn có chắc muốn hủy?",
       content: "Các thay đổi chưa lưu sẽ bị mất.",
       onOk() {
-        router.push(`/comic/${comicId}`);
+        router.push(`/comic/${comic?.slug}`);
       },
     });
   };
@@ -322,9 +318,9 @@ export default function EditComicPage() {
     setIsChapterModalOpen(true);
   };
 
-  const handleViewChapter = (chapterId: string) => {
+  const handleViewChapter = (chapterIdOrSlug: string) => {
     window.open(
-      `/comic/${comicId}/chapter/${chapterId}`,
+      `/comic/${comic?.slug}/chapter/${chapterIdOrSlug}`,
       "_blank",
       "noopener,noreferrer"
     );
@@ -354,6 +350,7 @@ export default function EditComicPage() {
     try {
       if (editingChapter) {
         // Update existing chapter
+
         const updatedChapter = { ...editingChapter, ...values };
         await ChapterQuery.updateChapter(editingChapter.id, updatedChapter);
 
@@ -373,7 +370,7 @@ export default function EditComicPage() {
         // Create new chapter
         const newChapterData = {
           ...values,
-          comicId: comicId,
+          comicId: comic?.id,
         };
         const createdChapter = await ChapterQuery.createChapter(newChapterData);
 
@@ -452,7 +449,7 @@ export default function EditComicPage() {
               type="text"
               size="small"
               icon={<EyeOutlined />}
-              onClick={() => handleViewChapter(record.id)}
+              onClick={() => handleViewChapter(record.slug || record.id)}
             />
           </Tooltip>
           <Tooltip title="Chỉnh sửa">
@@ -533,7 +530,7 @@ export default function EditComicPage() {
               <Button onClick={() => router.back()}>Quay lại</Button>
               <Button
                 type="primary"
-                onClick={() => router.push(`/comic/${comicId}`)}
+                onClick={() => router.push(`/comic/${comic.slug}`)}
               >
                 Xem truyện
               </Button>

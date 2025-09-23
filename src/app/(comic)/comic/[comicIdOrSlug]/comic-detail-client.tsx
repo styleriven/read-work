@@ -269,7 +269,7 @@ export default function ComicDetailClient({
       <div className="min-h-screen ">
         {/* Header Section */}
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-stretch gap-6">
+          <div className="flex md:flex-row flex-col items-stretch gap-6">
             {/* Cover Image */}
             <div className="flex-shrink-0">
               {user?.id === comicData?.authorId ? (
@@ -315,7 +315,7 @@ export default function ComicDetailClient({
                   Đọc Truyện
                 </button>
                 {user?.id === comicData?.authorId && (
-                  <Link href={`/comic/${comicData.id}/edit`} passHref>
+                  <Link href={`/comic/${comicData.slug}/edit`} passHref>
                     <button className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2">
                       Chỉnh Sửa
                     </button>
@@ -438,7 +438,7 @@ export default function ComicDetailClient({
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex gap-6">
+          <div className="flex md:flex-row flex-col gap-6">
             {/* Left Content */}
             <div className="flex-1">
               {/* Purchase Banner */}
@@ -475,7 +475,7 @@ export default function ComicDetailClient({
                       {chapters.map((chapter: any, index: number) => (
                         <Link
                           key={chapter.id}
-                          href={`/comic/${initialComic.id}/chapter/${chapter.id}`}
+                          href={`/comic/${initialComic.slug}/chapter/${chapter.slug}`}
                           className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors border border-gray-100"
                         >
                           <span
@@ -540,6 +540,7 @@ export default function ComicDetailClient({
                     <ComicCardHorizontal
                       key={story.id}
                       id={story.id}
+                      slug={story.slug}
                       title={story.title}
                       image={story.coverImage}
                       description={story.description}

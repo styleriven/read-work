@@ -1,13 +1,19 @@
+import { slugify } from "@/lib/uitls/utils";
 import { IComic } from "@models/interfaces/i-comic";
 import comicRepository from "@models/repositories/comic-repository";
 import { HttpStatusCode } from "axios";
-import { filter } from "framer-motion/dist/m";
 import { ApiError } from "next/dist/server/api-utils";
+import { v4 } from "uuid";
 
 class ComicAction {
   async createComic(data: Partial<IComic>): Promise<IComic> {
     try {
+      data._id = v4();
+      const baseSlug = slugify(data.title || "");
+      const slug = `${baseSlug}-${data._id.slice(0, 8)}`;
+      data.slug = slug;
       const newComic = await comicRepository.create(data);
+
       return newComic;
     } catch (error) {
       console.error("Error creating comic:", error);
@@ -33,9 +39,9 @@ class ComicAction {
     }
   }
 
-  async getComic(comicId: string): Promise<IComic> {
+  async getComic(comicIdOrSlug: string): Promise<IComic> {
     try {
-      const comic = await comicRepository.getFullById(comicId);
+      const comic = await comicRepository.getFull(comicIdOrSlug);
       if (!comic) {
         throw new ApiError(HttpStatusCode.NotFound, "Comic not found");
       }
@@ -58,12 +64,20 @@ class ComicAction {
 
   async updateComic(
     userId: string,
-    id: string,
+    comicIdOrSlug: string,
     updateData: Partial<IComic>
   ): Promise<IComic | null> {
     try {
       const filter = { authorId: userId };
-      const updatedComic = await comicRepository.update(id, updateData, filter);
+      if (updateData && updateData.title) {
+        updateData.slug =
+          slugify(updateData.title) + "-" + comicIdOrSlug.slice(0, 8);
+      }
+      const updatedComic = await comicRepository.updateIdOrSlug(
+        comicIdOrSlug,
+        updateData,
+        filter
+      );
       return updatedComic;
     } catch (error) {
       console.error("Error updating comic:", error);

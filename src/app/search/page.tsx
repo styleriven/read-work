@@ -14,8 +14,6 @@ export async function generateMetadata({
   const params = await searchParams;
   const query = params.q || "";
   const page = parseInt(params.page || "1");
-  const categories = params.categories || "";
-  const status = params.status || "";
 
   // Clean query string cho canonical URL
   const cleanParams = Object.fromEntries(

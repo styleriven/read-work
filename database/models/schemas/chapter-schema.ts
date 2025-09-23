@@ -15,6 +15,10 @@ const chapterSchema = new Schema<IChapter>(
     },
     slug: {
       type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      match: /^[a-z0-9-]+$/,
     },
     comicId: {
       type: String,

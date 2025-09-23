@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import ChapterNavigation from "../chapter-navigation";
 import Loading from "@/components/ui/loading";
 import { Button } from "antd";
-import { useRouter } from "next/navigation";
-import { ChapterQuery } from "@/lib/server/queries/chapter-query";
+import { usePathname, useRouter } from "next/navigation";
 
 interface ChapterDetailClientProps {
   initialChapter: {
@@ -20,15 +19,15 @@ export default function ChapterDetailClient({
 }: ChapterDetailClientProps) {
   const [chapter, setChapter] = useState<any>(initialChapter.chapter);
   const [prevChapter, setPrevChapter] = useState<
-    { id: string; name?: string } | undefined
+    { id: string; name?: string; slug?: string } | undefined
   >(initialChapter.prevChapter);
   const [nextChapter, setNextChapter] = useState<
-    { id: string; name?: string } | undefined
+    { id: string; name?: string; slug?: string } | undefined
   >(initialChapter.nextChapter);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingChapter, setLoadingChapter] = useState(false);
   const router = useRouter();
-
+  const url = usePathname();
   const fetchData = async () => {
     setIsLoading(true);
     setChapter(initialChapter.chapter);
@@ -44,13 +43,14 @@ export default function ChapterDetailClient({
   const handlePrevious = () => {
     if (isLoading === true) return;
     setIsLoading(true);
-    router.push(`/comic/${chapter.comicId}/chapter/${prevChapter?.id}`);
+
+    router.push(`${url.replace(/\/[^\/]+$/, "")}/${prevChapter?.slug}`);
   };
 
   const handleNext = () => {
     if (isLoading === true) return;
     setIsLoading(true);
-    router.push(`/comic/${chapter.comicId}/chapter/${nextChapter?.id}`);
+    router.push(`${url.replace(/\/[^\/]+$/, "")}/${nextChapter?.slug}`);
   };
 
   if (isLoading) {

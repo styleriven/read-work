@@ -40,6 +40,7 @@ export default function BookGrid() {
           <ComicCardVertical
             key={comic.id}
             id={comic.id}
+            slug={comic.slug}
             title={comic.title}
             img={comic.coverImage ?? "/default-cover.png"}
           />

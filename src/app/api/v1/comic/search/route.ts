@@ -129,7 +129,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 export async function POST(request: NextRequest) {
   return handleApiRequest(async () => {
-    const categories = await categoryAction.GetALLSummary();
+    const categories = await categoryAction.getALLSummary();
 
     const filterOptions = {
       categories,

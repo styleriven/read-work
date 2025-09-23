@@ -1,14 +1,14 @@
 import { chapterAction } from "@/lib/server/action/chapter-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { withAuth } from "@/middleware/auth";
-import context from "antd/es/app/context";
 import { HttpStatusCode } from "axios";
-import { data } from "framer-motion/dist/m";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PUT = async (
   req: NextRequest,
-  context: { params: Promise<{ comicId: string; chapterId: string }> }
+  context: {
+    params: Promise<{ comicIdOrSlug: string; chapterIdOrSlug: string }>;
+  }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
@@ -19,10 +19,10 @@ export const PUT = async (
       );
     }
 
-    const { comicId, chapterId } = await context.params;
-    if (!comicId || !chapterId)
+    const { chapterIdOrSlug } = await context.params;
+    if (!chapterIdOrSlug)
       return NextResponse.json(
-        { message: "Comic ID and Chapter ID are required" },
+        { message: " Chapter ID or Slug are required" },
         {
           status: HttpStatusCode.BadRequest,
         }
@@ -39,7 +39,7 @@ export const PUT = async (
 
     const updatedChapter = await chapterAction.updateChapter(
       auth.user.id,
-      chapterId,
+      chapterIdOrSlug,
       chapterData
     );
     return NextResponse.json(updatedChapter, {
@@ -51,19 +51,19 @@ export const PUT = async (
 export const GET = async (
   req: NextRequest,
   context: {
-    params: Promise<{ comicId: string; chapterId: string }>;
+    params: Promise<{ comicIdOrSlug: string; chapterIdOrSlug: string }>;
   }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
-    const { comicId, chapterId } = await context.params;
-    if (!comicId || !chapterId)
+    const { chapterIdOrSlug } = await context.params;
+    if (!chapterIdOrSlug)
       return NextResponse.json(
-        { message: "Comic ID and Chapter ID are required" },
+        { message: "Chapter ID or Slug are required" },
         {
           status: HttpStatusCode.BadRequest,
         }
       );
-    const data = await chapterAction.getChapterById(comicId, chapterId);
+    const data = await chapterAction.getChapterByIdOrSlug(chapterIdOrSlug);
     if (!data?.chapter) {
       return NextResponse.json(
         { message: "Chapter not found" },

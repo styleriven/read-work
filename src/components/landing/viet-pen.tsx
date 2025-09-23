@@ -51,7 +51,7 @@ export default function VietPen() {
                   className="border-b border-dashed border-gray-200"
                 >
                   <a
-                    href={`/comic/${comic.id}`}
+                    href={`/comic/${comic.slug}`}
                     className="flex items-center justify-between gap-4 px-2 py-3 group hover:bg-gray-50 rounded-md"
                   >
                     <div className="flex-1 flex gap-2 min-w-0">

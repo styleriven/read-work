@@ -6,10 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  context: { params: Promise<{ comicId: string }> }
+  context: { params: Promise<{ comicIdOrSlug: string }> }
 ): Promise<NextResponse> => {
-  const { comicId } = await context.params;
-  if (!comicId)
+  const { comicIdOrSlug } = await context.params;
+  if (!comicIdOrSlug)
     return NextResponse.json(
       { message: "Comic ID is required" },
       {
@@ -25,7 +25,7 @@ export const GET = async (
   const limit = limitParam !== null ? Number(limitParam) : undefined;
 
   const chapters = await chapterAction.getChaptersByComicId(
-    comicId,
+    comicIdOrSlug,
     q,
     page,
     limit
@@ -37,7 +37,7 @@ export const GET = async (
 
 export const POST = async (
   req: NextRequest,
-  context: { params: Promise<{ comicId: string }> }
+  context: { params: Promise<{ comicIdOrSlug: string }> }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
@@ -47,9 +47,9 @@ export const POST = async (
         { status: auth.status }
       );
     }
+    const { comicIdOrSlug } = await context.params;
 
-    const { comicId } = await context.params;
-    if (!comicId)
+    if (!comicIdOrSlug)
       return NextResponse.json(
         { message: "Comic ID is required" },
         { status: HttpStatusCode.BadRequest }
@@ -58,7 +58,7 @@ export const POST = async (
 
     const newChapter = await chapterAction.createChapter(auth.user.id, {
       ...chapterData,
-      comicId,
+      comicIdOrSlug,
     });
     return NextResponse.json(newChapter, {
       status: HttpStatusCode.Created,

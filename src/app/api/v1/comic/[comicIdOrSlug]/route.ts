@@ -1,5 +1,6 @@
 import comicAction from "@/lib/server/action/comic-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
+import { slugify } from "@/lib/uitls/utils";
 import { withAuth } from "@/middleware/auth";
 import context from "antd/es/app/context";
 import { HttpStatusCode } from "axios";
@@ -7,19 +8,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  context: { params: Promise<{ comicId: string }> }
+  context: { params: Promise<{ comicIdOrSlug: string }> }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
-    const { comicId } = await context.params;
-    if (!comicId)
+    const { comicIdOrSlug } = await context.params;
+    if (!comicIdOrSlug)
       return NextResponse.json(
-        { message: "Comic ID is required" },
+        { message: "Comic ID or slug is required" },
         {
           status: HttpStatusCode.BadRequest,
         }
       );
 
-    const comic = await comicAction.getComic(comicId);
+    const comic = await comicAction.getComic(comicIdOrSlug);
 
     return NextResponse.json(comic, {
       status: HttpStatusCode.Ok,
@@ -29,7 +30,7 @@ export const GET = async (
 
 export const PATCH = async (
   req: NextRequest,
-  context: { params: Promise<{ comicId: string }> }
+  context: { params: Promise<{ comicIdOrSlug: string }> }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
@@ -41,17 +42,19 @@ export const PATCH = async (
       );
     }
 
-    const { comicId } = await context.params;
-    if (!comicId)
+    const { comicIdOrSlug } = await context.params;
+    if (!comicIdOrSlug)
       return NextResponse.json(
-        { message: "Comic ID is required" },
+        { message: "Comic ID or slug is required" },
         { status: HttpStatusCode.BadRequest }
       );
 
     const { title, authorName, description, category, type, coverImage } =
       await req.json();
     const updatedComic: any = {
-      ...(title && { title }),
+      ...(title && {
+        title,
+      }),
       ...(authorName && { authorName }),
       ...(description && { description }),
       ...(category && { categoryId: category }),
@@ -68,7 +71,7 @@ export const PATCH = async (
 
     const result = await comicAction.updateComic(
       auth.user.id,
-      comicId,
+      comicIdOrSlug,
       updatedComic
     );
     if (!result) {

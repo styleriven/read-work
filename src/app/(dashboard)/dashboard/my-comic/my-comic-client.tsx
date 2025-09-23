@@ -109,7 +109,7 @@ export default function MyComicClient({
                 title: "Tên Truyện",
                 dataIndex: "title",
                 render: (_, record) => (
-                  <Link href={`/comic/${record.id}`}>{record.title}</Link>
+                  <Link href={`/comic/${record.slug}`}>{record.title}</Link>
                 ),
               },
               { title: "Tác Giả", dataIndex: "authorName" },

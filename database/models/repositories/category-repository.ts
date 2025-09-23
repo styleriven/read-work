@@ -3,12 +3,12 @@ import { CategoryModel } from "@models/schemas";
 import { BaseRepository } from "./base-repository";
 
 class CategoryRepository extends BaseRepository<ICategory> {
-  async GetALL(): Promise<ICategory[]> {
+  async getALL(): Promise<ICategory[]> {
     await this.ensureConnection();
     return await this.model.find();
   }
 
-  async GetALLSummary(): Promise<{ id: string; name: string }[]> {
+  async getALLSummary(): Promise<{ id: string; name: string }[]> {
     await this.ensureConnection();
     return await this.model.find().select("id name");
   }

@@ -1,9 +1,11 @@
+import { slugify } from "@/lib/uitls/utils";
 import { IChapter } from "@models/interfaces/i-chapter";
 import chapterRepository from "@models/repositories/chapter-repository";
 import comicRepository from "@models/repositories/comic-repository";
 import { message } from "antd";
 import { HttpStatusCode } from "axios";
 import { ApiError } from "next/dist/server/api-utils";
+import { v4 } from "uuid";
 import { th } from "zod/v4/locales";
 
 class ChapterAction {
@@ -61,7 +63,9 @@ class ChapterAction {
           })
         );
       }
-
+      data._id = v4();
+      data.authorId = [userId];
+      data.slug = slugify(data.title || "") + "-" + data._id.slice(0, 8);
       const newChapter = await chapterRepository.create(data);
       return newChapter;
     } catch (error) {
@@ -91,6 +95,9 @@ class ChapterAction {
           })
         );
       }
+      if (data.title && data.title !== chapter.title) {
+        data.slug = slugify(data.title) + "-" + chapterId.slice(0, 8);
+      }
       const updatedChapter = await chapterRepository.update(chapterId, data);
       return updatedChapter;
     } catch (error) {
@@ -99,16 +106,11 @@ class ChapterAction {
     }
   }
 
-  async getChapterById(comicId: string, chapterId: string) {
+  async getChapterByIdOrSlug(chapterIdOrSlug: string) {
     try {
-      const data = await chapterRepository.findChapterWithNeighbors(chapterId);
-      const chapter = data?.chapter;
-      if (!chapter || chapter.comicId !== comicId) {
-        throw new ApiError(
-          HttpStatusCode.NotFound,
-          JSON.stringify({ message: "Chapter not found" })
-        );
-      }
+      const data = await chapterRepository.findChapterWithNeighbors(
+        chapterIdOrSlug
+      );
       return data;
     } catch (error) {
       console.error("Error fetching chapter by ID:", error);

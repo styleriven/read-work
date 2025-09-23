@@ -15,7 +15,7 @@ export interface IChapter extends IBase {
   }[];
   isPremium: boolean;
   authorNote?: string;
-  authorId: string;
+  authorId: string[];
   translatorNote?: string;
   stats: {
     viewsCount: number;

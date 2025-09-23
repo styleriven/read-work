@@ -49,7 +49,6 @@ export default function ModalChapterEdit({
   const onFinish = async (values: IChapter & { publishedAt?: any }) => {
     try {
       setLoading(true);
-
       const payload = {
         ...values,
         publishedAt: values.publishedAt

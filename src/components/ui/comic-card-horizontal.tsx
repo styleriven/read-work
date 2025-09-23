@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export default function ComicCardHorizontal({
   id,
+  slug,
   title,
   image,
   description,
@@ -11,13 +12,14 @@ export default function ComicCardHorizontal({
   ...props
 }: {
   id: string;
+  slug: string;
   title: string;
   image: string;
   description: string;
   className?: string;
 }) {
   return (
-    <Link href={`/comic/${id}`} className="block">
+    <Link href={`/comic/${slug}`} className="block">
       <div
         key={id}
         className={`flex gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors ${className}`}

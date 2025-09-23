@@ -1,9 +1,8 @@
 import { Modal, Button, List } from "antd";
 import { BookOutlined, CloseOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import "@ant-design/v5-patch-for-react-19";
-import router from "next/router";
 
 export default function ChapterListModal({
   visible,
@@ -18,6 +17,7 @@ export default function ChapterListModal({
 }) {
   const [sortOrder, setSortOrder] = useState("asc");
   const router = useRouter();
+  const url = usePathname();
   const sortedChapterList = [...chapterList].sort((a, b) => {
     if (sortOrder === "asc") {
       return a.chapterNumber - b.chapterNumber;
@@ -31,7 +31,7 @@ export default function ChapterListModal({
   };
 
   const handleChapterClick = (chapter: any) => {
-    router.push(`/comic/${chapter.comicId}/chapter/${chapter.id}`);
+    router.push(`${url.replace(/\/[^\/]+$/, "")}/${chapter?.slug}`);
     onClose();
   };
 

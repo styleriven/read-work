@@ -4,12 +4,14 @@ import Link from "next/link";
 
 export default function ComicCardVertical({
   id,
+  slug,
   title,
   img,
   className,
   ...props
 }: {
   id: string;
+  slug: string;
   title: string;
   img: string;
   className?: string;
@@ -18,7 +20,7 @@ export default function ComicCardVertical({
     <Link
       className={`flex flex-col justify-center text-center p-2 bg-white rounded-xl shadow hover:shadow-lg hover:scale-[1.05] transition cursor-pointer ${className}`}
       title={title}
-      href={`/comic/${id}`}
+      href={`/comic/${slug}`}
       {...props}
     >
       <Image

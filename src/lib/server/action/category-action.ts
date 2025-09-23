@@ -1,9 +1,9 @@
 import categoryRepository from "@models/repositories/category-repository";
 
 class CategoryAction {
-  async GetALL() {
+  async getALL() {
     try {
-      const categories = await categoryRepository.GetALL();
+      const categories = await categoryRepository.getALL();
       return categories;
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -11,9 +11,9 @@ class CategoryAction {
     }
   }
 
-  async GetALLSummary() {
+  async getALLSummary() {
     try {
-      const categories = await categoryRepository.GetALLSummary();
+      const categories = await categoryRepository.getALLSummary();
       return categories;
     } catch (error) {
       console.error("Error fetching category summaries:", error);

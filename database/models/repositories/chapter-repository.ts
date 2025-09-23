@@ -31,14 +31,14 @@ class ChapterRepository extends BaseRepository<IChapter> {
     };
   }
 
-  async findChapterWithNeighbors(chapterId: string) {
+  async findChapterWithNeighbors(chapterIdOrSlug: string) {
     await this.ensureConnection();
     const now = new Date();
 
     const result = await this.model.aggregate([
       {
         $match: {
-          _id: chapterId,
+          $or: [{ _id: chapterIdOrSlug }, { slug: chapterIdOrSlug }],
           deletedAt: null,
           publishedAt: { $lt: now, $ne: null },
         },
@@ -67,7 +67,13 @@ class ChapterRepository extends BaseRepository<IChapter> {
             { $sort: { chapterNumber: -1 } },
             { $limit: 1 },
             {
-              $project: { id: "$_id", title: 1, chapterNumber: 1, comicId: 1 },
+              $project: {
+                id: "$_id",
+                title: 1,
+                chapterNumber: 1,
+                comicId: 1,
+                slug: 1,
+              },
             },
           ],
           as: "prevChapter",
@@ -97,7 +103,13 @@ class ChapterRepository extends BaseRepository<IChapter> {
             { $sort: { chapterNumber: 1 } },
             { $limit: 1 },
             {
-              $project: { id: "$_id", title: 1, chapterNumber: 1, comicId: 1 },
+              $project: {
+                id: "$_id",
+                title: 1,
+                chapterNumber: 1,
+                comicId: 1,
+                slug: 1,
+              },
             },
           ],
           as: "nextChapter",
@@ -110,12 +122,14 @@ class ChapterRepository extends BaseRepository<IChapter> {
         },
       },
     ]);
-
     const currentChapter = result[0];
     if (!currentChapter) return null;
 
     this.model
-      .updateOne({ _id: chapterId }, { $inc: { "stats.viewsCount": 1 } })
+      .updateOne(
+        { $or: [{ _id: chapterIdOrSlug }, { slug: chapterIdOrSlug }] },
+        { $inc: { "stats.viewsCount": 1 } }
+      )
       .exec();
 
     const { prevChapter, nextChapter, ...chapterData } = currentChapter;
@@ -147,7 +161,7 @@ class ChapterRepository extends BaseRepository<IChapter> {
       .find(filter)
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("id title chapterNumber comicId")
+      .select("id title chapterNumber comicId slug")
       .sort({ chapterNumber: 1 })
       .exec();
     return {
@@ -167,9 +181,14 @@ class ChapterRepository extends BaseRepository<IChapter> {
     };
     const chapters = await this.model
       .find(filter)
-      .select("id title chapterNumber comicId")
+      .select("id title chapterNumber comicId slug")
       .exec();
     return chapters;
+  }
+
+  async getALL() {
+    await this.ensureConnection();
+    return this.model.find({}).exec();
   }
 }
 export default new ChapterRepository(ChapterModel);

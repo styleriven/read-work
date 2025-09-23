@@ -222,7 +222,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const response = await $globalFetch.post(REQUEST_URLS_V1.LOGIN, {
+          const response = await $fetch.post(REQUEST_URLS_V1.LOGIN, {
             email: credentials.email,
             password: credentials.password,
           });

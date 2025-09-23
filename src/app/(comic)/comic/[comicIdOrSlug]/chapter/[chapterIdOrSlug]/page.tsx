@@ -4,9 +4,9 @@ import ChapterDetailClient from "./chapter-detail-client";
 export default async function ChapterDetail({
   params,
 }: {
-  params: { comicId: string; chapterId: string };
+  params: { comicIdOrSlug: string; chapterIdOrSlug: string };
 }) {
-  const { comicId, chapterId } = await params;
+  const { comicIdOrSlug, chapterIdOrSlug } = await params;
 
   let result: {
     chapter: any;
@@ -19,10 +19,10 @@ export default async function ChapterDetail({
   };
 
   try {
-    if (comicId && chapterId) {
+    if (comicIdOrSlug && chapterIdOrSlug) {
       const chapterResult = await ChapterQuery.getChapterById(
-        comicId,
-        chapterId
+        comicIdOrSlug,
+        chapterIdOrSlug
       );
 
       result = {

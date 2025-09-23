@@ -9,7 +9,6 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { Spin } from "antd";
 import AllComicsCard from "./all-comics-card";
 import ComicCard from "../ui/comic-card-vertical";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
@@ -19,30 +18,23 @@ export default function AllComics() {
   const [comicRanking, setComicRanking] = useState<any[]>([]);
   const [isLoadingRanking, setIsLoadingRanking] = useState(false);
 
+  const [comicNewlyUpdated, setComicNewlyUpdated] = useState<any[]>([]);
+  const [isLoadingNewlyUpdated, setIsLoadingNewlyUpdated] = useState(false);
+
   async function fetchComics(typeComic: number, type: number) {
     try {
       if (typeComic === 0) {
-        setIsLoadingRanking(true);
         const data = await ComicQuery.getRandomComics(9);
         setComicRanking(data);
       }
       if (typeComic === 1) {
-        setIsLoadingNewlyUpdated(true);
         const data = await ComicQuery.getRandomComics(9);
         setComicNewlyUpdated(data);
       }
     } catch (error) {
       console.error("Error fetching comics:", error);
-    } finally {
-      setIsLoadingRanking(false);
-      setIsLoadingNewlyUpdated(false);
     }
   }
-
-  useEffect(() => {
-    fetchComics(0, 0);
-    fetchComics(1, 0);
-  }, []);
 
   const [contentRanking, setContentRanking] = useState({
     title: "Bảng xếp hạng",
@@ -85,33 +77,29 @@ export default function AllComics() {
     }));
   }
 
-  function GetComicTrendy(type: number) {
+  async function GetComicTrendy(type: number) {
     if (isLoadingRanking) return;
     setIsLoadingRanking(true);
     ChangeStatusContentRanking(type);
-    setTimeout(() => {
-      switch (type) {
-        case 0:
-          fetchComics(0, 0);
-          break;
-        case 1:
-          fetchComics(0, 1);
-          break;
-        case 2:
-          fetchComics(0, 2);
-          break;
-        case 3:
-          fetchComics(0, 3);
-          break;
-        default:
-          setComicRanking([]);
-      }
-      setIsLoadingRanking(false);
-    }, 1000);
-  }
 
-  const [comicNewlyUpdated, setComicNewlyUpdated] = useState<any[]>([]);
-  const [isLoadingNewlyUpdated, setIsLoadingNewlyUpdated] = useState(false);
+    switch (type) {
+      case 0:
+        await fetchComics(0, 0);
+        break;
+      case 1:
+        await fetchComics(0, 1);
+        break;
+      case 2:
+        await fetchComics(0, 2);
+        break;
+      case 3:
+        await fetchComics(0, 3);
+        break;
+      default:
+        setComicRanking([]);
+    }
+    setIsLoadingRanking(false);
+  }
 
   const [contentNewlyUpdated, setContentNewlyUpdated] = useState({
     title: "Mới cập nhật",
@@ -154,29 +142,27 @@ export default function AllComics() {
     }));
   }
 
-  function GetComicNewlyUpdated(type: number) {
+  async function GetComicNewlyUpdated(type: number) {
     if (isLoadingNewlyUpdated) return;
     setIsLoadingNewlyUpdated(true);
     ChangeStatusContentNewlyUpdated(type);
-    setTimeout(() => {
-      switch (type) {
-        case 0:
-          fetchComics(1, 0);
-          break;
-        case 1:
-          fetchComics(1, 1);
-          break;
-        case 2:
-          fetchComics(1, 2);
-          break;
-        case 3:
-          fetchComics(1, 3);
-          break;
-        default:
-          setComicNewlyUpdated([]);
-      }
-      setIsLoadingNewlyUpdated(false);
-    }, 1000);
+    switch (type) {
+      case 0:
+        await fetchComics(1, 0);
+        break;
+      case 1:
+        await fetchComics(1, 1);
+        break;
+      case 2:
+        await fetchComics(1, 2);
+        break;
+      case 3:
+        await fetchComics(1, 3);
+        break;
+      default:
+        setComicNewlyUpdated([]);
+    }
+    setIsLoadingNewlyUpdated(false);
   }
 
   useEffect(() => {
@@ -205,6 +191,7 @@ export default function AllComics() {
                 <ComicCard
                   key={comic.id}
                   id={comic.id}
+                  slug={comic.slug}
                   title={comic.title}
                   img={comic.coverImage ?? "/default-cover.png"}
                 />
@@ -230,6 +217,7 @@ export default function AllComics() {
                 <ComicCard
                   key={comic.id}
                   id={comic.id}
+                  slug={comic.slug}
                   title={comic.title}
                   img={comic.coverImage ?? "/default-cover.png"}
                 />

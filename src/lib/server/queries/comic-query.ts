@@ -48,9 +48,9 @@ export class ComicQuery {
     };
   }
 
-  static async getComicById(comicId: string): Promise<IComic> {
+  static async getComicByIdOrSlug(comicIdOrSlug: string): Promise<IComic> {
     const response = await $globalFetch.get(
-      `${REQUEST_URLS_V1.COMIC}/${comicId}`
+      `${REQUEST_URLS_V1.COMIC}/${comicIdOrSlug}`
     );
     return response.data;
   }

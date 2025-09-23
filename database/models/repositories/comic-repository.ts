@@ -32,12 +32,12 @@ class ComicRepository extends BaseRepository<IComic> {
     return { data, totalCount, totalPages, currentPage: page };
   }
 
-  async getFullById(_id: string): Promise<IComic | null> {
+  async getFull(idOrSlug: string): Promise<IComic | null> {
     await this.ensureConnection();
 
     const comic = await this.model
       .findOneAndUpdate(
-        { _id, deletedAt: null },
+        { $or: [{ _id: idOrSlug }, { slug: idOrSlug }], deletedAt: null },
         { $inc: { "stats.viewsCount": 1 } },
         { new: true }
       )
@@ -100,6 +100,30 @@ class ComicRepository extends BaseRepository<IComic> {
       .populate("categories", "id name")
       .exec();
     return { data, totalCount, limit, currentPage: page };
+  }
+
+  async getALL(): Promise<IComic[]> {
+    await this.ensureConnection();
+    return await this.model.find();
+  }
+
+  async updateIdOrSlug(
+    idOrSlug: string,
+    updateData: Partial<IComic>,
+    filter: Partial<IComic> = {}
+  ): Promise<IComic | null> {
+    await this.ensureConnection();
+    return (await this.model
+      .findOneAndUpdate(
+        {
+          $or: [{ _id: idOrSlug }, { slug: idOrSlug }],
+          deletedAt: null,
+          ...(filter as any),
+        },
+        updateData,
+        { new: true }
+      )
+      .exec()) as IComic | null;
   }
 }
 

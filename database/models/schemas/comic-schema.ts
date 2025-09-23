@@ -15,7 +15,10 @@ const comicSchema = new Schema<IComic>(
     },
     slug: {
       type: String,
+      required: true,
+      unique: true,
       lowercase: true,
+      match: /^[a-z0-9-]+$/,
     },
     description: {
       type: String,
