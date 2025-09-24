@@ -45,6 +45,27 @@ class ChapterRepository extends BaseRepository<IChapter> {
       },
       {
         $lookup: {
+          from: "comics",
+          localField: "comicId",
+          foreignField: "_id",
+          as: "comic",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                title: 1,
+                slug: 1,
+                description: 1,
+                coverImage: 1,
+                authorName: 1,
+              },
+            },
+          ],
+        },
+      },
+      { $unwind: "$comic" },
+      {
+        $lookup: {
           from: this.model.collection.name,
           let: {
             comicId: "$comicId",
@@ -132,12 +153,13 @@ class ChapterRepository extends BaseRepository<IChapter> {
       )
       .exec();
 
-    const { prevChapter, nextChapter, ...chapterData } = currentChapter;
+    const { prevChapter, nextChapter, comic, ...chapterData } = currentChapter;
 
     return {
       chapter: chapterData,
       prevChapter: prevChapter || null,
       nextChapter: nextChapter || null,
+      comic: comic || null,
     };
   }
 

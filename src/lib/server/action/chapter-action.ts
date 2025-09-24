@@ -2,12 +2,9 @@ import { slugify } from "@/lib/uitls/utils";
 import { IChapter } from "@models/interfaces/i-chapter";
 import chapterRepository from "@models/repositories/chapter-repository";
 import comicRepository from "@models/repositories/comic-repository";
-import { message } from "antd";
 import { HttpStatusCode } from "axios";
 import { ApiError } from "next/dist/server/api-utils";
 import { v4 } from "uuid";
-import { th } from "zod/v4/locales";
-
 class ChapterAction {
   async getChaptersByComicId(
     comicId: string,

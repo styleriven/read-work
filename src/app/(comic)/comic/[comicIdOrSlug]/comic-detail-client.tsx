@@ -32,6 +32,8 @@ import { useRouter } from "next/navigation";
 import { ChapterQuery } from "@/lib/server/queries/chapter-query";
 import page from "./page";
 import { formatNumber } from "@/lib/uitls/utils";
+import { StructuredData } from "@/components/seo/StructuredData";
+import { Breadcrumb } from "@/components/common/breadcrumb";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -42,8 +44,6 @@ interface ComicDetailClientProps {
 export default function ComicDetailClient({
   initialComic,
 }: ComicDetailClientProps) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("info");
   const [comicData, setComicData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingChapter, setIsLoadingChapter] = useState(true);
@@ -125,6 +125,11 @@ export default function ComicDetailClient({
     },
   ];
 
+  const [breadcrumbs, setBreadcrumbs] = useState([
+    { name: "Trang chủ", url: "/" },
+    { name: comicData?.title },
+  ]);
+
   const fetchRelatedStories = async () => {
     try {
       const data = await ComicQuery.getRandomComics(10);
@@ -138,6 +143,10 @@ export default function ComicDetailClient({
     try {
       setIsLoading(true);
       setComicData(initialComic);
+      setBreadcrumbs([
+        { name: "Trang chủ", url: "/" },
+        { name: initialComic?.title },
+      ]);
     } catch (error) {
       console.error("Error fetching comic:", error);
     } finally {
@@ -187,7 +196,6 @@ export default function ComicDetailClient({
 
   function SendComment(content: string, id?: string, name?: string) {
     alert(`Bình luận về ID: ${id}, Tên: ${name}, Nội dung: ${content}`);
-    // setModalSendCommentOpen(true);
   }
 
   function OpenModalSendMail(id?: string, name?: string) {
@@ -265,10 +273,15 @@ export default function ComicDetailClient({
         onOk={SendComment}
         onCancel={CloseModalSendMail}
       />
-
+      <StructuredData
+        comic={comicData}
+        type="comic"
+        breadcrumbs={breadcrumbs}
+      />
       <div className="min-h-screen ">
         {/* Header Section */}
         <div className="max-w-7xl mx-auto px-4 py-6">
+          <Breadcrumb items={breadcrumbs} className="mb-6" />
           <div className="flex md:flex-row flex-col items-stretch gap-6">
             {/* Cover Image */}
             <div className="flex-shrink-0">

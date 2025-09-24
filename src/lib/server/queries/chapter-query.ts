@@ -49,7 +49,15 @@ export class ChapterQuery {
     comicId: string,
     chapterId: string
   ): Promise<{
-    chapter: IChapter;
+    chapter: any;
+    comic?: {
+      id: string;
+      title?: string;
+      slug?: string;
+      description?: string;
+      coverImage?: string;
+      authorName?: string;
+    };
     prevChapter?: { id: string; name?: string };
     nextChapter?: { id: string; name?: string };
   }> {

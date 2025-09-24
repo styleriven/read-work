@@ -6,7 +6,10 @@ import New from "@/components/landing/new";
 import Panel from "@/components/landing/panel";
 import UserInfo from "@/components/landing/user-info";
 import VietPen from "@/components/landing/viet-pen";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { RocketOutlined } from "@ant-design/icons";
+import { Breadcrumb } from "antd";
+import { div } from "framer-motion/dist/m";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -7,6 +7,7 @@ import SearchPagination from "./components/SearchPagination";
 import LoadingSkeleton from "./components/LoadingSkeleton";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
 import { SearchFilterOptions, SearchPageProps } from "@/types/search";
+import { Breadcrumb } from "@/components/common/breadcrumb";
 
 export async function generateMetadata({
   searchParams,
@@ -292,6 +293,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { searchData, filtersData, error } = await getSearchData(params);
   const currentPage = parseInt(params.page || "1");
   const hasQuery = Boolean(params.q?.trim());
+  const breadcrumbs = [{ name: "Trang chủ", url: "/" }, { name: "Tìm kiếm" }];
   const currentUrl = `${process.env.NEXT_PUBLIC_APP_URL}/search${
     Object.keys(params).length > 0
       ? "?" + new URLSearchParams(params as Record<string, string>)
@@ -360,6 +362,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <main className="lg:w-3/4" role="main">
             {/* Search Header */}
             <header className="mb-6">
+              <Breadcrumb items={breadcrumbs} className="mb-6" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
                 {hasQuery ? `Tìm kiếm: "${params.q}"` : "Tìm kiếm truyện tranh"}
               </h1>
