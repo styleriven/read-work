@@ -49,7 +49,7 @@ export default function Header({
 
   const items = menuItems.map((item, i) => ({
     key: i,
-    label: <a onClick={() => handleClickList(item)}>{item.title}</a>,
+    label: <button onClick={() => handleClickList(item)}>{item.title}</button>,
   }));
 
   const menuItemTypes = [
@@ -70,7 +70,7 @@ export default function Header({
 
   const itemTypes = menuItemTypes.map((item, i) => ({
     key: i,
-    label: <a onClick={() => handleClickType(item)}>{item.title}</a>,
+    label: <button onClick={() => handleClickType(item)}>{item.title}</button>,
   }));
 
   const menuItemUser = [
@@ -103,15 +103,14 @@ export default function Header({
         {item.icon} {item.title}
       </a>
     ) : (
-      <a
-        href="#"
+      <button
         onClick={(e) => {
           e.preventDefault();
           item.onClick?.();
         }}
       >
         {item.icon} {item.title}
-      </a>
+      </button>
     ),
   }));
 
@@ -141,24 +140,24 @@ export default function Header({
         </div>
 
         <Dropdown menu={{ items }} trigger={["click"]}>
-          <a
+          <button
             className={`cursor-pointer text-white whitespace-nowrap sm:flex ${
               open ? "flex" : "hidden"
             }`}
           >
             Danh sách
             <DownOutlined className="ml-2" />
-          </a>
+          </button>
         </Dropdown>
         <Dropdown menu={{ items: itemTypes }} trigger={["click"]}>
-          <a
+          <button
             className={`cursor-pointer text-white whitespace-nowrap sm:flex ${
               open ? "flex" : "hidden"
             }`}
           >
             Thể loại
             <DownOutlined className="ml-2" />
-          </a>
+          </button>
         </Dropdown>
       </div>
       <div
@@ -203,10 +202,10 @@ export default function Header({
               trigger={["click"]}
               className="px-4 py-2"
             >
-              <a className="cursor-pointer text-white whitespace-nowrap">
+              <button className="cursor-pointer text-white whitespace-nowrap">
                 Xin chào, {user.userName || user.email}
                 <DownOutlined className="ml-2" />
-              </a>
+              </button>
             </Dropdown>
           ) : (
             <>

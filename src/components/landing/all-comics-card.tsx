@@ -20,7 +20,7 @@ export default function AllComicsCard({
 
         <div className="mt-2 mr-4">
           {Children.map((child, index) => (
-            <a
+            <button
               key={index}
               className={`flex ml-4 gap-2 text-base cursor-pointer ${
                 child.status ? "text-gray-700" : "text-gray-400"
@@ -29,7 +29,7 @@ export default function AllComicsCard({
             >
               <div className="text-gray-600">{child.icon}</div>
               <span className="flex items-center gap-1 ">{child.label}</span>
-            </a>
+            </button>
           ))}
         </div>
       </div>

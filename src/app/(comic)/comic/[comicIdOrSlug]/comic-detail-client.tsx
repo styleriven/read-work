@@ -536,9 +536,9 @@ export default function ComicDetailClient({
                   />
                 ))}
                 <div className="mt-4 flex justify-center">
-                  <a className="text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-600 p-1 rounded-lg transition-colors cursor-pointer ">
+                  <button className="text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-600 p-1 rounded-lg transition-colors cursor-pointer ">
                     Xem Thêm Bình Luận
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
