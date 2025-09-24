@@ -15,7 +15,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Đọc Truyện Online Miễn Phí - Read World | Kho Truyện Hay Nhất",
   description:
-    "Đọc truyện online miễn phí tại Read World: truyện tranh, tiểu thuyết, light novel cập nhật mỗi ngày. Giao diện đẹp, đọc mượt mà.",
+    " Read World cung cấp hàng nghìn bộ truyện tranh, tiểu thuyết, light novel được cập nhật liên tục. Bạn có thể tìm kiếm theo thể loại, tác giả, hoặc xu hướng mới nhất. Giao diện đẹp, đọc mượt mà trên mọi thiết bị.",
   openGraph: {
     title: "Đọc Truyện Online Miễn Phí - Read World",
     description:
@@ -26,6 +26,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   return (
     <div className="w-full">
+      <h1 className="sr-only">Đọc Truyện Online Miễn Phí - Read World</h1>
       <section className="flex flex-col gap-2 md:flex-row items-center justify-center text-center p-4 h-1/4">
         <New />
         <Panel />

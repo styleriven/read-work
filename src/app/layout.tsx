@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: domain ? new URL(domain) : undefined,
   title:
     "Đọc Truyện Online - Read World | Kho Truyện Miễn Phí Cập Nhật Nhanh Nhất",
   description:

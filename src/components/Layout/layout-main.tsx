@@ -15,7 +15,6 @@ export default function LayoutMain({
 }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <h1 className="sr-only">Đọc Truyện Online Miễn Phí - Read World</h1>
       <Header className="bg-[#0B3973] relative z-10" />
       <main
         className={`flex-1 w-full bg-gray-100 bg-[url('/huy.jpg')] bg-cover bg-center bg-fixed ${className}`}
