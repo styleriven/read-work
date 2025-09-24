@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: ComicPageProps) {
     return {
       title: "Không tìm thấy chương",
       description: "Chương truyện không tồn tại hoặc đã bị xóa.",
-      robots: "noindex, nofollow",
+      robots: "noindex",
     };
   }
   return generateSEOMetadata({

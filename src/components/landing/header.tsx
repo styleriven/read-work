@@ -14,7 +14,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useContext, createContext, useState } from "react";
-import { div } from "framer-motion/dist/m";
 export default function Header({
   className,
   ...props
@@ -179,14 +178,12 @@ export default function Header({
             }}
           />
 
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 whitespace-nowrap"
-            onClick={() =>
-              route.push(`/search?q=${encodeURIComponent(search)}`)
-            }
+          <Link
+            href={`/search?q=${encodeURIComponent(search)}`}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
             Tìm kiếm
-          </button>
+          </Link>
         </div>
 
         {status === "loading" && (

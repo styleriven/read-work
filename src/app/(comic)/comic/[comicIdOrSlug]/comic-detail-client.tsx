@@ -34,6 +34,7 @@ import page from "./page";
 import { formatNumber } from "@/lib/uitls/utils";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { Breadcrumb } from "@/components/common/breadcrumb";
+import { div } from "framer-motion/dist/m";
 
 const { Title, Text, Paragraph } = Typography;
 

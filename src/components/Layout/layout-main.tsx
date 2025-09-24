@@ -1,5 +1,3 @@
-"use client";
-import { usePathname } from "next/navigation";
 import Footer from "../landing/footer";
 import Header from "../landing/header";
 

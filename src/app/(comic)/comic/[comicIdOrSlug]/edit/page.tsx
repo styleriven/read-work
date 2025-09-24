@@ -279,7 +279,7 @@ export default function EditComicPage() {
 
       // Navigate back after short delay
       setTimeout(() => {
-        router.push(`/comic/${comic?.slug}`);
+        router.push(`/comic/${data?.slug}`);
       }, 1000);
     } catch (err) {
       console.error("Update error:", err);

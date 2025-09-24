@@ -9,18 +9,14 @@ import VietPen from "@/components/landing/viet-pen";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { RocketOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
-import { div } from "framer-motion/dist/m";
+import { div, image } from "framer-motion/dist/m";
 import { Metadata } from "next";
+import { domain } from "zod/v4/core/regexes.cjs";
 
 export const metadata: Metadata = {
   title: "Đọc Truyện Online Miễn Phí - Read World | Kho Truyện Hay Nhất",
   description:
     " Read World cung cấp hàng nghìn bộ truyện tranh, tiểu thuyết, light novel được cập nhật liên tục. Bạn có thể tìm kiếm theo thể loại, tác giả, hoặc xu hướng mới nhất. Giao diện đẹp, đọc mượt mà trên mọi thiết bị.",
-  openGraph: {
-    title: "Đọc Truyện Online Miễn Phí - Read World",
-    description:
-      "Khám phá kho tàng truyện online miễn phí với hàng nghìn đầu truyện hay nhất",
-  },
 };
 
 export default async function Home() {

@@ -95,6 +95,7 @@ class ChapterAction {
       if (data.title && data.title !== chapter.title) {
         data.slug = slugify(data.title) + "-" + chapterId.slice(0, 8);
       }
+
       const updatedChapter = await chapterRepository.update(chapterId, data);
       return updatedChapter;
     } catch (error) {
