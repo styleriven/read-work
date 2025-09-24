@@ -172,7 +172,7 @@ export default function AllComics() {
 
   return (
     <div className="w-full">
-      <p className="flex p-4 ml-10">Tất Cả Tác Phẩm</p>
+      <h2 className="flex p-4 ml-10">Tất Cả Tác Phẩm</h2>
       <div className=" border p-4 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100/60">
         <div className="flex justify-between mb-10">
           <AllComicsCard

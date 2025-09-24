@@ -77,23 +77,17 @@ export default function Header({
     {
       title: "Trang cá nhân",
       icon: <UserOutlined />,
-      onClick: () => {
-        route.push("/dashboard/profile");
-      },
+      href: "/dashboard/profile",
     },
     {
       title: "Đăng truyện",
       icon: <UploadOutlined />,
-      onClick: () => {
-        route.push("/comic/create");
-      },
+      href: "/comic/create",
     },
     {
       title: "Quản lý truyện",
       icon: <UnorderedListOutlined />,
-      onClick: () => {
-        route.push("/dashboard/my-comic");
-      },
+      href: "/dashboard/my-comic",
     },
     {
       title: "Đăng xuất",
@@ -104,12 +98,23 @@ export default function Header({
 
   const userItems = menuItemUser.map((item, i) => ({
     key: i,
-    label: (
-      <a onClick={item.onClick}>
+    label: item.href ? (
+      <a href={item.href}>
+        {item.icon} {item.title}
+      </a>
+    ) : (
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          item.onClick?.();
+        }}
+      >
         {item.icon} {item.title}
       </a>
     ),
   }));
+
   return (
     <div
       className={`${className} sticky top-0 z-50 mx-auto py-1 flex flex-col md:flex-row  justify-between  items-center w-full h-fit `}

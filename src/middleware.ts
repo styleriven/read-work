@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
             "Content-Type, Authorization, X-Requested-With, Accept, Origin, ngrok-skip-browser-warning",
           "Access-Control-Max-Age": "86400",
           "ngrok-skip-browser-warning": "true",
+          "X-Robots-Tag": "noindex, nofollow",
         },
       });
     }
@@ -44,10 +45,22 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/icons/") ||
     pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|woff|woff2|ttf|eot)$/)
   ) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set("X-Robots-Tag", "index, follow");
+    return response;
   }
 
-  return authMiddleware(request);
+  if (pathname.startsWith("/admin")) {
+    const response = await authMiddleware(request);
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return response;
+  }
+
+  const response = await authMiddleware(request);
+
+  response.headers.set("X-Robots-Tag", "index, follow");
+
+  return response;
 }
 
 export const config = {

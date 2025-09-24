@@ -12,7 +12,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Đọc Truyện Online Miễn Phí - Read World | Kho Truyện Hay Nhất",
   description:
-    "Khám phá kho tàng truyện online miễn phí tại Read World với hàng nghìn đầu truyện tranh, tiểu thuyết, light novel được cập nhật hàng ngày. Giao diện đẹp, đọc mượt mà.",
+    "Đọc truyện online miễn phí tại Read World: truyện tranh, tiểu thuyết, light novel cập nhật mỗi ngày. Giao diện đẹp, đọc mượt mà.",
   openGraph: {
     title: "Đọc Truyện Online Miễn Phí - Read World",
     description:

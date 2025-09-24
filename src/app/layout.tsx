@@ -6,7 +6,7 @@ import AuthProvider from "@/lib/providers/auth-provider";
 import AuthProviderHelper from "@/lib/providers/auth-provider-helper";
 import LayoutMain from "@/components/Layout/layout-main";
 
-const domain = process.env.NEXT_PUBLIC_BASE_URL;
+const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

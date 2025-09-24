@@ -30,7 +30,7 @@ export default function VietPen() {
 
   return (
     <div className="w-full">
-      <p className="flex p-4 ml-10">Hồn Bút Việt</p>
+      <h2 className="flex p-4 ml-10">Hồn Bút Việt</h2>
       <div className="flex justify-center border p-4 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100/60">
         <LastResort
           title="Tinh Tú Xuất Thế"
