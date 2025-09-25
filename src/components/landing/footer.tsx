@@ -17,7 +17,7 @@ export default function Footer({ className = "", ...props }: FooterProps) {
         <Link href="/" className="hover:underline">
           Trang chủ
         </Link>
-        <Link href="/about" className="hover:underline">
+        {/* <Link href="/about" className="hover:underline">
           Giới thiệu
         </Link>
         <Link href="/services" className="hover:underline">
@@ -28,7 +28,7 @@ export default function Footer({ className = "", ...props }: FooterProps) {
         </Link>
         <Link href="/blog" className="hover:underline">
           Blog
-        </Link>
+        </Link> */}
       </div>
     </footer>
   );
