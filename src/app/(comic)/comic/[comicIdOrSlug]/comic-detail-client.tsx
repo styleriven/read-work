@@ -285,7 +285,7 @@ export default function ComicDetailClient({
           <Breadcrumb items={breadcrumbs} className="mb-6" />
           <div className="flex md:flex-row flex-col items-stretch gap-6">
             {/* Cover Image */}
-            <div className="flex-shrink-0">
+            <div className="flex flex-col flex-shrink-0 items-center justify-center">
               {comicData?.authorId.includes(user?.id) ? (
                 <Upload
                   name="file"
@@ -476,7 +476,7 @@ export default function ComicDetailClient({
               {/* Tabs */}
               <div className="bg-white rounded-lg shadow-sm">
                 <div className="p-4 flex flex-col gap-6">
-                  <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <h3 className=" text-black font-semibold mb-4 flex items-center gap-2">
                     Danh Sách Chương
                   </h3>
 
@@ -521,7 +521,7 @@ export default function ComicDetailClient({
                 id="comments"
                 className="flex flex-col gap-1 bg-white rounded-lg shadow-sm mt-6 p-4"
               >
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <h3 className="text-black font-semibold mb-4 flex items-center gap-2">
                   Bình Luận {`(49)`}
                 </h3>
                 {comments.map((comment) => (
@@ -546,7 +546,7 @@ export default function ComicDetailClient({
 
             <div className="w-80">
               <div className="bg-white rounded-lg shadow-sm p-4">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <h3 className=" text-black font-semibold mb-4 flex items-center gap-2">
                   Có Thể Bạn Thích
                 </h3>
                 <div className="space-y-4 max-h-[450px] overflow-y-auto">

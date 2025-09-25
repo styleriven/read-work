@@ -20,6 +20,27 @@ class CategoryAction {
       throw error;
     }
   }
+
+  async getCategoryBySlug(
+    categorySlug: string,
+    query: { q?: string; page?: string; limit?: string }
+  ) {
+    try {
+      const page = query.page ? parseInt(query.page, 10) : 1;
+      const limit = query.limit ? parseInt(query.limit, 10) : 10;
+      const q = query.q || undefined;
+
+      const filter: any = { slug: categorySlug, deletedAt: null };
+      const categories = await categoryRepository.getCategoryBySlug(filter, q, {
+        page,
+        limit,
+      });
+      return categories;
+    } catch (error) {
+      console.error("Error fetching category by slug:", error);
+      throw error;
+    }
+  }
 }
 
 export const categoryAction = new CategoryAction();

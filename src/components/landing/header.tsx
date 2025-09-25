@@ -13,7 +13,9 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect, use } from "react";
+import { CategoryQuery } from "@/lib/server/queries/category-query";
+
 export default function Header({
   className,
   ...props
@@ -27,6 +29,9 @@ export default function Header({
 
   const { data: session, status } = useSession();
   const user = session?.user;
+
+  const [menuItemTypes, setMenuItemTypes] = useState<any>([]);
+
   const menuItems = [
     {
       title: "Tìm kiếm năng cao",
@@ -51,25 +56,13 @@ export default function Header({
     label: <button onClick={() => handleClickList(item)}>{item.title}</button>,
   }));
 
-  const menuItemTypes = [
-    {
-      title: "Thể loại 1",
-    },
-    {
-      title: "Thể loại 2",
-    },
-    {
-      title: "Thể loại 3",
-    },
-  ];
-
   function handleClickType(menuItem: any) {
-    console.log("Selected type: " + menuItem.title);
+    console.log("Selected type: " + menuItem.name);
   }
 
-  const itemTypes = menuItemTypes.map((item, i) => ({
+  const itemTypes = menuItemTypes.map((item: any, i: number) => ({
     key: i,
-    label: <button onClick={() => handleClickType(item)}>{item.title}</button>,
+    label: <button onClick={() => handleClickType(item)}>{item.name}</button>,
   }));
 
   const menuItemUser = [
@@ -113,16 +106,29 @@ export default function Header({
     ),
   }));
 
+  async function getMenuItemTypes() {
+    try {
+      const data = await CategoryQuery.getAll();
+      setMenuItemTypes(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }
+
+  useEffect(() => {
+    getMenuItemTypes();
+  }, []);
+
   return (
     <div
-      className={`${className} sticky top-0 z-50 mx-auto py-1 flex flex-col md:flex-row  justify-between  items-center w-full h-fit `}
+      className={`${className} sticky top-0 z-50 mx-auto py-1 flex flex-col md:flex-row  justify-between items-center w-full h-fit `}
       {...props}
     >
-      <div className="flex ml-2 gap-4 items-start sm:items-center sm:flex-row flex-col w-full mb-2 sm:mb-0">
+      <div className="flex gap-4 items-start sm:items-center sm:flex-row flex-col w-full mb-2 sm:mb-0">
         <div className="flex justify-between items-center w-full sm:w-auto">
           <Link href="/">
             <Image
-              className="cursor-pointer transition duration-300 hover:opacity-80 hover:scale-105"
+              className="ml-2 cursor-pointer transition duration-300 hover:opacity-80 hover:scale-105"
               title="Trang chủ"
               src="/logo.jpg"
               alt="Logo"
@@ -140,34 +146,35 @@ export default function Header({
 
         <Dropdown menu={{ items }} trigger={["click"]}>
           <button
-            className={`cursor-pointer text-white whitespace-nowrap sm:flex ${
+            className={` ml-2 cursor-pointer items-center gap-2 justify-center text-white whitespace-nowrap sm:flex ${
               open ? "flex" : "hidden"
             }`}
           >
-            Danh sách
-            <DownOutlined className="ml-2" />
+            <span>Danh sách</span>
+            <DownOutlined />
           </button>
         </Dropdown>
         <Dropdown menu={{ items: itemTypes }} trigger={["click"]}>
           <button
-            className={`cursor-pointer text-white whitespace-nowrap sm:flex ${
+            className={`ml-2 cursor-pointer gap-2 text-white items-center justify-center whitespace-nowrap sm:flex ${
               open ? "flex" : "hidden"
             }`}
           >
-            Thể loại
-            <DownOutlined className="ml-2" />
+            <span>Thể loại</span>
+            <DownOutlined />
           </button>
         </Dropdown>
       </div>
       <div
-        className={`ml-2 gap-4 items-start sm:items-center sm:flex-row flex-col sm:flex w-full md:w-auto ${
+        className={`gap-4 items-start sm:items-center sm:flex-row flex-col sm:flex w-full ${
           open ? "flex" : "hidden"
         }`}
       >
-        <div className="flex flex-row">
+        <div className="flex flex-row items-center w-full sm:w-auto gap-2">
           <input
-            className="pl-5 pr-12 bg-white/5 text-white border rounded-xl placeholder-white/700 p-2
-                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 mr-4"
+            className="flex-1 min-w-0 px-4 py-2 bg-white/5 text-white border border-white/20 rounded-xl 
+        placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-purple-500 
+        focus:border-transparent transition-all duration-200"
             placeholder="Nhập tên truyện"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -180,7 +187,8 @@ export default function Header({
 
           <Link
             href={`/search?q=${encodeURIComponent(search)}`}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 whitespace-nowrap"
+            className="flex-shrink-0 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl 
+        transition-colors duration-200 text-sm sm:text-base whitespace-nowrap"
           >
             Tìm kiếm
           </Link>
@@ -197,11 +205,11 @@ export default function Header({
             <Dropdown
               menu={{ items: userItems }}
               trigger={["click"]}
-              className="px-4 py-2"
+              className="ml-2"
             >
-              <button className="cursor-pointer text-white whitespace-nowrap">
-                Xin chào, {user.userName || user.email}
-                <DownOutlined className="ml-2" />
+              <button className="flex items-center gap-2 justify-center cursor-pointer text-white whitespace-nowrap">
+                <span>Xin chào, {user.userName || user.email}</span>
+                <DownOutlined />
               </button>
             </Dropdown>
           ) : (

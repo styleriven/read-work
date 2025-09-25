@@ -6,6 +6,7 @@ import Loading from "../ui/loading";
 import { IComic } from "@models/interfaces/i-comic";
 import { timeAgo } from "@/lib/uitls/utils";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
+import Link from "next/link";
 
 export default function LastResort({
   title,
@@ -62,7 +63,10 @@ export default function LastResort({
         <div className="text-gray-600">{icon}</div>
         <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
       </div>
-      <div className="flex items-start gap-3 mb-4">
+      <Link
+        href={`/comic/${comics[0]?.slug}`}
+        className="flex items-start gap-3 mb-4"
+      >
         <div className="flex-1">
           <h3 className="text-sm text-left font-medium text-gray-800 mb-1 line-clamp-1">
             {comics[0]?.title}
@@ -86,13 +90,14 @@ export default function LastResort({
             className="w-full h-full object-cover rounded-md"
           />
         </div>
-      </div>
+      </Link>
 
       {/* Comic List */}
       <div className="space-y-1">
         {comics.slice(1)?.map((comic) => (
-          <div
+          <Link
             key={comic._id}
+            href={`/comic/${comic.slug}`}
             className="flex items-center justify-between group hover:bg-gray-50 -mx-2 px-2 py-2 rounded transition-colors cursor-pointer border-t border-gray-100"
             title={comic.title}
           >
@@ -107,7 +112,7 @@ export default function LastResort({
                 {comic.stats?.viewsCount ?? 0}
               </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

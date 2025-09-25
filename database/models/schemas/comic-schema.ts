@@ -186,6 +186,8 @@ comicSchema.virtual("categories", {
   justOne: false,
 });
 
+comicSchema.index({ categoryId: 1, deletedAt: 1, _id: -1 });
+
 const ComicModel =
   (mongoose.models?.Comic as mongoose.Model<IComic>) ||
   mongoose.model<IComic>("Comic", comicSchema);

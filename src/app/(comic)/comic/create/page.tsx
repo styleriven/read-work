@@ -417,7 +417,6 @@ export default function CreateComicPage() {
                     )}
                   />
                 </Form.Item>
-
                 <Form.Item className="mb-0">
                   <Space>
                     <Button
@@ -427,9 +426,11 @@ export default function CreateComicPage() {
                       icon={<SaveOutlined />}
                       loading={isLoadingSubmit}
                       disabled={!canCreateComic}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-blue-600 hover:bg-blue-700 pb-2"
                     >
-                      {isLoadingSubmit ? "Đang đăng..." : "Đăng truyện"}
+                      <span className="pt-2">
+                        {isLoadingSubmit ? "Đang đăng..." : "Đăng truyện"}
+                      </span>
                     </Button>
                     <Button size="large" onClick={() => form.resetFields()}>
                       Làm mới

@@ -8,6 +8,7 @@ import LoadingSkeleton from "./components/LoadingSkeleton";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
 import { SearchFilterOptions, SearchPageProps } from "@/types/search";
 import { Breadcrumb } from "@/components/common/breadcrumb";
+import { CollapsibleSidebar } from "./components/CollapsibleSidebar";
 
 export async function generateMetadata({
   searchParams,
@@ -312,51 +313,31 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <div className="container mx-auto px-4 py-8 min-h-screen">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Filters */}
-          <aside className="lg:w-1/4" role="complementary">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"
-                  />
-                </svg>
-                Bộ lọc tìm kiếm
-              </h2>
-
-              {error ? (
-                <div className="text-red-500 text-sm" role="alert">
-                  Không thể tải bộ lọc
-                </div>
-              ) : (
-                <Suspense
-                  fallback={
-                    <div className="space-y-4" aria-label="Đang tải bộ lọc">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="animate-pulse">
-                          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                          <div className="h-8 bg-gray-200 rounded"></div>
-                        </div>
-                      ))}
-                    </div>
-                  }
-                >
-                  <SearchFilters
-                    filterOptions={filtersData}
-                    currentFilters={params}
-                  />
-                </Suspense>
-              )}
-            </div>
-          </aside>
+          <CollapsibleSidebar>
+            {error ? (
+              <div className="text-red-500 text-sm" role="alert">
+                Không thể tải bộ lọc
+              </div>
+            ) : (
+              <Suspense
+                fallback={
+                  <div className="space-y-4" aria-label="Đang tải bộ lọc">
+                    {[...Array(5)].map((_, i) => (
+                      <div key={i} className="animate-pulse">
+                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                        <div className="h-8 bg-gray-200 rounded"></div>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <SearchFilters
+                  filterOptions={filtersData}
+                  currentFilters={params}
+                />
+              </Suspense>
+            )}
+          </CollapsibleSidebar>
 
           {/* Main Content */}
           <main className="lg:w-3/4" role="main">

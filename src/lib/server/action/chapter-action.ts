@@ -70,6 +70,7 @@ class ChapterAction {
       throw error;
     }
   }
+
   async updateChapter(
     userId: string,
     chapterId: string,

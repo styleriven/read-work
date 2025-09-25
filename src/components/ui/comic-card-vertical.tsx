@@ -30,7 +30,7 @@ export default function ComicCardVertical({
         height={200}
         className="rounded-lg mx-auto"
       />
-      <p className="truncate mt-2 text-sm font-medium w-full mx-auto">
+      <p className="text-black truncate mt-2 text-sm font-medium w-full mx-auto">
         {title}
       </p>
     </Link>

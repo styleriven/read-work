@@ -12,10 +12,13 @@ export default function UserInfo() {
     <div className="md:w-1/4 w-full flex flex-col justify-center gap-2 items-center h-full">
       <div className=" rounded-2xl  p-6 ">
         <div className="text-center">
-          <button className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 shadow-lg transform hover:scale-105">
+          <a
+            href="comic/create"
+            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 shadow-lg transform hover:scale-105"
+          >
             Đăng truyện
-          </button>
-          <p className="">Khu vực cho tác giả</p>
+          </a>
+          <p className="text-black">Khu vực cho tác giả</p>
         </div>
       </div>
 
@@ -32,7 +35,7 @@ export default function UserInfo() {
               </div>
               <EyeOutlined />
             </div>
-            <div className="text-xs mt-1 px-1">Đã Đọc</div>
+            <div className="text-black text-xs mt-1 px-1">Đã Đọc</div>
           </li>
           <li className="p-2">
             <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
@@ -44,25 +47,25 @@ export default function UserInfo() {
               </div>
               <BookOutlined />
             </div>
-            <div className="text-xs mt-1">Bookmark</div>
+            <div className="text-black text-xs mt-1">Bookmark</div>
           </li>
           <li className="p-2">
             <div className="flex items-center justify-center w-10 h-10  bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <BellOutlined />
             </div>
-            <div className="text-xs mt-1">Hệ Thống</div>
+            <div className=" text-black text-xs mt-1">Hệ Thống</div>
           </li>
           <li className="p-2">
             <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <UserOutlined />
             </div>
-            <div className="text-xs mt-1">Tài Khoản</div>
+            <div className="text-black text-xs mt-1">Tài Khoản</div>
           </li>
           <li className="p-2">
             <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <UndoOutlined />
             </div>
-            <div className="text-xs mt-1 px-1">Hồi đáp</div>
+            <div className="text-black text-xs mt-1 px-1">Hồi đáp</div>
           </li>
         </ul>
       </div>

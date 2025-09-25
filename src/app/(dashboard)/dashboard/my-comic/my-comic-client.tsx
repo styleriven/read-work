@@ -7,6 +7,7 @@ import { IComic } from "@models/interfaces/i-comic";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { param } from "framer-motion/dist/m";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const { Search } = Input;
 
@@ -51,18 +52,17 @@ export default function MyComicClient({
     setSortOption(initialSort);
   }, [initialComics]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams();
-      if (keyword) params.set("keyword", keyword);
-      if (sortOption) params.set("sort", sortOption);
-      params.set("page", page ? page.toString() : "1");
-      params.set("limit", limit ? limit.toString() : "10");
+  const debouncedKeyword = useDebounce(keyword, 500);
 
-      router.push(`/dashboard/my-comic?${params.toString()}`);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [page, keyword, sortOption]);
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (keyword) params.set("keyword", keyword);
+    if (sortOption) params.set("sort", sortOption);
+    params.set("page", page ? page.toString() : "1");
+    params.set("limit", limit ? limit.toString() : "10");
+
+    router.push(`/dashboard/my-comic?${params.toString()}`);
+  }, [page, debouncedKeyword, sortOption]);
 
   const handleSearch = (value: string) => {
     setKeyword(value);
@@ -71,10 +71,10 @@ export default function MyComicClient({
 
   return (
     <div className="p-6 flex-grow min-h-screen">
-      <div className="flex items-center justify-between mb-4 gap-2">
+      <div className="flex flex-col sm:flex-row text-black items-center justify-between mb-4 gap-2">
         <h2 className="text-lg font-bold">Danh Sách Truyện ({total})</h2>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-center gap-2">
           <Select
             value={sortOption}
             options={optionSelect}

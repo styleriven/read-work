@@ -16,7 +16,7 @@ import { domain } from "zod/v4/core/regexes.cjs";
 export const metadata: Metadata = {
   title: "Đọc Truyện Online Miễn Phí - Read World | Kho Truyện Hay Nhất",
   description:
-    "Read World cung cấp hàng nghìn bộ truyện tranh, tiểu thuyết, light novel được cập nhật liên tục. Bạn có thể tìm kiếm theo thể loại, tác giả, hoặc xu hướng mới nhất",
+    "Read World cung cấp hàng nghìn bộ truyện tranh, tiểu thuyết được cập nhật liên tục. Bạn có thể tìm kiếm theo thể loại, tác giả, hoặc xu hướng mới nhất",
 };
 export default async function Home() {
   return (

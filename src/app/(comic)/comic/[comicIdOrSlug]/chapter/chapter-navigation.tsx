@@ -53,12 +53,12 @@ export default function ChapterNavigation({
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
+      <div className="w-full flex items-center justify-between mb-6">
         <Button
           onClick={onPrevious}
           disabled={isLoading}
-          className={`bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg 
-            font-semibold transition-colors disabled:cursor-not-allowed flex items-center gap-2 justify-center
+          className={`bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white  py-3 rounded-lg 
+            font-semibold transition-colors disabled:cursor-not-allowed flex items-center gap-2 justify-center truncate
             ${onPrevious ? "opacity-100" : "opacity-0 cursor-default"}`}
         >
           <LeftOutlined className="w-5 h-5" />
@@ -68,16 +68,16 @@ export default function ChapterNavigation({
         <Button
           onClick={handleShowChapterList}
           loading={loadingChapterList}
-          className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="bg-gray-500 hover:bg-gray-600 text-white  rounded-lg transition-colors gap-2 pb-2"
         >
-          <OrderedListOutlined className="w-5 h-5" />
+          <OrderedListOutlined className="pt-2" />
         </Button>
 
         <Button
           onClick={onNext}
           disabled={isLoading}
-          className={`bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg
-            font-semibold transition-colors disabled:cursor-not-allowed flex items-center gap-2
+          className={`bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-3 rounded-lg
+            font-semibold transition-colors disabled:cursor-not-allowed flex items-center gap-2 truncate
             ${onNext ? "opacity-100" : "opacity-0 cursor-default"}`}
         >
           Chương Tiếp

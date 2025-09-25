@@ -90,7 +90,7 @@ export default function SearchFilters({
   }
 
   return (
-    <Card title="Bộ lọc tìm kiếm" className="w-full">
+    <Card className="w-full m-1">
       <Form form={form} layout="vertical" className="space-y-4">
         <Form.Item label="Tìm kiếm" className="mb-4">
           <Input.Search

@@ -153,7 +153,7 @@ export default function ChapterDetailClient({
 
           <div className="bg-white rounded-lg shadow-sm p-8 mb-6">
             <div className="prose prose-lg max-w-none">
-              <h2 className="text-xl font-bold mb-6 text-center">
+              <h2 className="text-xl text-black font-bold mb-6 text-center">
                 {chapter?.title}
               </h2>
               {chapter?.content && (

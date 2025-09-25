@@ -42,9 +42,8 @@ export default function Panel() {
 
   return (
     <div className="md:w-1/2 w-full">
-      <div className="relative group">
+      <div className="group">
         <h2 className="text-center mb-2">{panels[selectedPanel].name}</h2>
-
         <div className="relative w-full h-72 overflow-hidden rounded-lg">
           <AnimatePresence mode="wait">
             <motion.img
@@ -58,23 +57,22 @@ export default function Panel() {
               transition={{ duration: 0.5 }}
             />
           </AnimatePresence>
-        </div>
-
-        <button
-          onClick={PrevPanel}
-          className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
+          <button
+            onClick={PrevPanel}
+            className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
               md:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          ❮
-        </button>
+          >
+            ❮
+          </button>
 
-        <button
-          onClick={NextPanel}
-          className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
+          <button
+            onClick={NextPanel}
+            className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
                 md:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          ❯
-        </button>
+          >
+            ❯
+          </button>
+        </div>
       </div>
     </div>
   );

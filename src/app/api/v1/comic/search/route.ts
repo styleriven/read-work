@@ -38,79 +38,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         limit: searchParams.get("limit") || "20",
       };
 
-      const filter: any = {
-        deletedAt: null,
-      };
-
-      // Text search
-      if (query.q) {
-        filter.$or = [
-          { title: { $regex: query.q, $options: "i" } },
-          { description: { $regex: query.q, $options: "i" } },
-          { authorName: { $regex: query.q, $options: "i" } },
-          { artist: { $regex: query.q, $options: "i" } },
-        ];
-      }
-
-      // Category filter
-      if (query.categories) {
-        filter.categoryId = { $in: query.categories };
-      }
-
-      // Status filter
-      if (query.status) {
-        filter.status = query.status;
-      }
-
-      // Type filter
-      if (query.type) {
-        filter.type = query.type;
-      }
-
-      // Age rating filter
-      if (query.ageRating) {
-        filter.ageRating = query.ageRating;
-      }
-
-      // Language filter
-      if (query.language) {
-        filter.language = query.language;
-      }
-
-      const sortOptions: { [key: string]: 1 | -1 } = {};
-      const sortBy = query.sortBy || "createdAt";
-      const sortOrder = query.sortOrder === "asc" ? 1 : -1;
-      const page = parseInt(query.page || "1", 10) || 1;
-      const limit = parseInt(query.limit || "20", 10) || 20;
-
-      switch (sortBy) {
-        case "title":
-          sortOptions.title = sortOrder;
-          break;
-        case "views":
-          sortOptions["stats.viewsCount"] = sortOrder;
-          break;
-        case "likes":
-          sortOptions["stats.likesCount"] = sortOrder;
-          break;
-        case "rating":
-          sortOptions["stats.avgRating"] = sortOrder;
-          break;
-        case "chapters":
-          sortOptions["stats.chaptersCount"] = sortOrder;
-          break;
-        case "lastChapterAt":
-          sortOptions.lastChapterAt = sortOrder;
-          break;
-        default:
-          sortOptions.createdAt = sortOrder;
-      }
-
       const data = await comicAction.searchComics({
-        filter,
-        sort: sortOptions,
-        page,
-        limit,
+        query,
       });
       return NextResponse.json(data, {
         status: HttpStatusCode.Ok,

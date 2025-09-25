@@ -52,12 +52,12 @@ export default function New() {
         </div>
       </div>
 
-      <div className="p-2 space-y-1 max-h-96 overflow-y-auto">
+      <div className="p-2 space-y-1 max-h-96 overflow-y-auto text-neutral-900">
         {notifications.map((notification) => (
           <div key={notification.id} className="group relative">
             <div className="flex items-center p-3 rounded-xl hover:bg-slate-700/30 transition-all duration-200 cursor-pointer">
               <div className="w-2 h-2 bg-green-400 rounded-full mr-3 flex-shrink-0"></div>
-              <div className="text-xs text-white bg-slate-700/30 rounded-full min-w-[2.5rem] mr-3">
+              <div className="text-xs  bg-slate-700/30 rounded-full min-w-[2.5rem] mr-3">
                 {notification.date}
               </div>
               <div className="flex-1 ">

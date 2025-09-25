@@ -157,13 +157,13 @@ export default function UserAuthForm({
     <div className=" from-slate-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md ">
         <div className="bg-white backdrop-blur-xl rounded-3xl p-8  border shadow-2xl">
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 text-black">
             <h1 className="text-3xl font-bold  mb-2">{title}</h1>
             <p className="">{subtitle}</p>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-2">
+          <div className="space-y-6 text-black">
+            <div className="space-y-2 ">
               <label htmlFor="email" className="text-sm font-medium block">
                 Email
               </label>
@@ -385,7 +385,7 @@ export default function UserAuthForm({
             </div>
           </div>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center text-black">
             <p className=" text-sm">
               {isLogin ? "Chưa có tài khoản?" : "Đã có tài khoản?"}{" "}
               <Link

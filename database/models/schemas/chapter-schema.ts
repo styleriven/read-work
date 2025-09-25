@@ -127,6 +127,12 @@ chapterSchema.virtual("author", {
   foreignField: "_id",
 });
 
+chapterSchema.index({
+  comicId: 1,
+  deletedAt: 1,
+  publishedAt: 1,
+});
+
 const ChapterModel =
   (mongoose.models?.Chapter as mongoose.Model<IChapter>) ||
   mongoose.model<IChapter>("Chapter", chapterSchema);

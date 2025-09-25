@@ -39,7 +39,7 @@ export default function ExclusiveComic() {
   return (
     <div className="md:w-1/4 w-full flex justify-center items-center hover:scale-[1.02] transition text-lg">
       <div className="flex flex-col justify-between h-full border p-5 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100">
-        <h2 className="flex items-center gap-2 font-semibold">
+        <h2 className="flex items-center gap-2 font-semibold text-black">
           <BgColorsOutlined />
           Độc quyền
         </h2>
@@ -55,7 +55,10 @@ export default function ExclusiveComic() {
                 title={comics[currentComic].title}
                 className="object-contain cursor-pointer"
               />
-              <p className="truncate w-full" title={comics[currentComic].title}>
+              <p
+                className="text-black truncate w-full"
+                title={comics[currentComic].title}
+              >
                 {comics[currentComic].title}
               </p>
             </>
@@ -67,7 +70,7 @@ export default function ExclusiveComic() {
             comics?.map((_, i) => (
               <div
                 key={i}
-                className={`w-2 h-2 rounded-full mr-3 cursor-pointer ${
+                className={`w-3 h-3 rounded-full mr-3 cursor-pointer ${
                   i === currentComic ? "bg-green-600" : "bg-green-400"
                 }`}
                 onClick={() => setCurrentComic(i)}

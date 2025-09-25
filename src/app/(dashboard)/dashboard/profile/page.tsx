@@ -184,7 +184,9 @@ export default function Profile() {
   );
 
   return isLoading || status === "loading" ? (
-    <Loading styleIcon={{ fontSize: "5rem" }} />
+    <div className="min-h-screen flex flex-col justify-center items-center">
+      <Loading styleIcon={{ fontSize: "5rem" }} />
+    </div>
   ) : (
     <div className="flex-grow  min-h-screen">
       <div className="max-w-4xl mx-auto py-6 px-4">

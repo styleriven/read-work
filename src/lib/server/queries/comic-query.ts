@@ -26,7 +26,6 @@ export class ComicQuery {
     totalCount: number;
     totalPages: number;
     currentPage: number;
-    isLoading: boolean;
   }> {
     let response;
     if (client) {
@@ -44,7 +43,6 @@ export class ComicQuery {
       totalCount: response.data.totalCount,
       totalPages: response.data.totalPages,
       currentPage: response.data.currentPage,
-      isLoading: false,
     };
   }
 
