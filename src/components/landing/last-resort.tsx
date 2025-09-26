@@ -68,7 +68,10 @@ export default function LastResort({
         className="flex items-start gap-3 mb-4"
       >
         <div className="flex-1">
-          <h3 className="text-sm text-left font-medium text-gray-800 mb-1 line-clamp-1">
+          <h3
+            className="text-sm text-left font-medium text-gray-800 mb-1 line-clamp-1 truncate"
+            title={comics[0]?.title}
+          >
             {comics[0]?.title}
           </h3>
           <div className="flex gap-4 text-xs text-gray-500">
@@ -101,8 +104,8 @@ export default function LastResort({
             className="flex items-center justify-between group hover:bg-gray-50 -mx-2 px-2 py-2 rounded transition-colors cursor-pointer border-t border-gray-100"
             title={comic.title}
           >
-            <div className="flex-1 pr-3 w-[60%]">
-              <h4 className="truncate w-full text-sm text-left text-gray-700 group-hover:text-gray-900 line-clamp-1">
+            <div className="flex-1 pr-3 truncate" title={comic.title}>
+              <h4 className="w-full text-sm text-left text-gray-700 group-hover:text-gray-900 line-clamp-1">
                 {comic.title}
               </h4>
             </div>

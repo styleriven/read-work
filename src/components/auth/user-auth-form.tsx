@@ -17,6 +17,7 @@ import { notify } from "../ui/notify";
 import { signIn } from "next-auth/react";
 import { AuthQuery } from "@/lib/server/queries/auth-query";
 import { Spin } from "antd";
+import { div } from "framer-motion/dist/m";
 
 const loginSchema = z.object({
   email: z
@@ -154,7 +155,7 @@ export default function UserAuthForm({
   }
 
   return (
-    <div className=" from-slate-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="flex from-slate-900 to-slate-900 items-center justify-center p-4 w-full h-[90vh]">
       <div className="w-full max-w-md ">
         <div className="bg-white backdrop-blur-xl rounded-3xl p-8  border shadow-2xl">
           <div className="text-center mb-8 text-black">

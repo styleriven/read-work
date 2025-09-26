@@ -1,6 +1,7 @@
 import { IComic } from "@models/interfaces/i-comic";
 import { BaseRepository } from "./base-repository";
 import { ComicModel } from "@models/schemas";
+import { $fetch } from "@/lib/axios";
 
 class ComicRepository extends BaseRepository<IComic> {
   async findByAuthorId(
@@ -34,18 +35,68 @@ class ComicRepository extends BaseRepository<IComic> {
 
   async getFull(idOrSlug: string): Promise<IComic | null> {
     await this.ensureConnection();
+    const pipeline = [
+      {
+        $match: {
+          $or: [{ _id: idOrSlug }, { slug: idOrSlug }],
+          deletedAt: null,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "authors",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                email: 1,
+                userName: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "categoryId",
+          foreignField: "_id",
+          as: "categories",
+          pipeline: [
+            {
+              $project: {
+                id: "$_id",
+                name: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          id: "$_id",
+        },
+      },
+    ];
 
-    const comic = await this.model
-      .findOneAndUpdate(
-        { $or: [{ _id: idOrSlug }, { slug: idOrSlug }], deletedAt: null },
-        { $inc: { "stats.viewsCount": 1 } },
-        { new: true }
-      )
-      .populate("author", "id email userName avatar")
-      .populate("categories", "id name")
-      .exec();
-
-    return comic;
+    const [result] = await Promise.all([
+      this.model.aggregate(pipeline).exec(),
+      this.model
+        .updateOne(
+          { $or: [{ _id: idOrSlug }, { slug: idOrSlug }] },
+          { $inc: { "stats.viewsCount": 1 } }
+        )
+        .exec()
+        .catch((err) => console.error("Failed to update view count:", err)),
+    ]);
+    if (!result || result.length === 0) {
+      return null;
+    }
+    return result[0];
   }
 
   async getRandomComics(numberComic?: number): Promise<IComic[]> {
@@ -83,24 +134,107 @@ class ComicRepository extends BaseRepository<IComic> {
 
   async search(filter: any, sort: any, pagination: PaginationOptions = {}) {
     await this.ensureConnection();
-
     const { page = 1, limit = 10 } = pagination;
+
     if (sort._id === undefined) {
       sort._id = -1;
     }
 
-    const totalCount = await this.model.countDocuments(filter).exec();
-    const skip = (page - 1) * limit;
+    const pipeline = [
+      { $match: filter },
+      {
+        $project: {
+          id: "$_id",
+          title: 1,
+          categories: 1,
+          coverImage: 1,
+          stats: 1,
+          authorId: 1,
+          slug: 1,
+          authorName: 1,
+          categoryId: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+      { $sort: sort },
+      {
+        $facet: {
+          data: [
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+            {
+              $lookup: {
+                from: "categories",
+                localField: "categoryId",
+                foreignField: "_id",
+                as: "category",
+                pipeline: [
+                  {
+                    $project: {
+                      id: "$_id",
+                      name: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "chapters",
+                localField: "Comics",
+                foreignField: "_id",
+                as: "chapters",
+                pipeline: [
+                  {
+                    $project: {
+                      id: "$_id",
+                      name: 1,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+          totalCount: [{ $count: "count" }],
+        },
+      },
+    ];
 
-    const data = await this.model
-      .find(filter)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .populate("categories", "id name")
-      .exec();
-    return { data, totalCount, limit, currentPage: page };
+    const result = await this.model.aggregate(pipeline).exec();
+
+    const data = result[0]?.data || [];
+    const totalCount = result[0]?.totalCount[0]?.count || 0;
+
+    return {
+      data,
+      totalCount,
+      limit,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   }
+
+  // async search(filter: any, sort: any, pagination: PaginationOptions = {}) {
+  //   await this.ensureConnection();
+
+  //   const { page = 1, limit = 10 } = pagination;
+  //   if (sort._id === undefined) {
+  //     sort._id = -1;
+  //   }
+
+  //   const totalCount = await this.model.countDocuments(filter).exec();
+  //   const skip = (page - 1) * limit;
+
+  //   const data = await this.model
+  //     .find(filter)
+  //     .sort(sort)
+  //     .skip(skip)
+  //     .limit(limit)
+  //     .populate("categories", "id name")
+  //     .exec();
+  //   return { data, totalCount, limit, currentPage: page };
+  // }
 
   async getALL(): Promise<IComic[]> {
     await this.ensureConnection();

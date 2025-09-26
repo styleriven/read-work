@@ -34,6 +34,7 @@ export default function VietPen() {
       <div className="flex justify-center border p-4 rounded-lg bg-gradient-to-b shadow-lg bg-gray-100/60">
         <LastResort
           title="Tinh Tú Xuất Thế"
+          className="px-8"
           icon={<StarOutlined className="w-3 h-3" />}
         />
         <div className="w-1/2 mx-10">
@@ -80,6 +81,7 @@ export default function VietPen() {
         </div>
         <LastResort
           title="Kim Thánh Bảng"
+          className="px-8"
           icon={<TrophyOutlined className="w-3 h-3" />}
         />
       </div>

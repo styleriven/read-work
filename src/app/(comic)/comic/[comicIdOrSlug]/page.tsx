@@ -37,7 +37,7 @@ export async function generateMetadata({
     url: generateComicUrl(data.slug),
     type: "article",
     modifiedTime: data?.updatedAt,
-    authors: [data.author],
+    authors: [data.authors.map((a: any) => a.name).join(", ")],
     tags: [...(data.categories?.map((x: any) => x.name) ?? [])],
   });
 }

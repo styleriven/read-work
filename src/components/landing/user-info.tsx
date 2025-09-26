@@ -18,14 +18,14 @@ export default function UserInfo() {
           >
             Đăng truyện
           </a>
-          <p className="text-black">Khu vực cho tác giả</p>
+          <p className="text-black pt-2">Khu vực cho tác giả</p>
         </div>
       </div>
 
       {/* Stats Card */}
       <div className="overflow-y-auto w-full">
         <ul className="flex justify-around gap-4">
-          <li className="p-2">
+          <li className="py-5">
             <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <div
                 className="absolute -top-2 -right-2 bg-[#f14668] text-white text-xs font-medium 
@@ -35,10 +35,12 @@ export default function UserInfo() {
               </div>
               <EyeOutlined />
             </div>
-            <div className="text-black text-xs mt-1 px-1">Đã Đọc</div>
+            <span className="text-black text-xs mt-1 px-1 whitespace-nowrap">
+              Đã Đọc
+            </span>
           </li>
-          <li className="p-2">
-            <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
+          <li className="py-5">
+            <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl  relative hover:scale-[1.02]">
               <div
                 className="absolute -top-2 -right-2 bg-[#f14668] text-white text-xs font-medium 
                   w-6 h-6 flex items-center justify-center rounded-full shadow-md"
@@ -47,25 +49,33 @@ export default function UserInfo() {
               </div>
               <BookOutlined />
             </div>
-            <div className="text-black text-xs mt-1">Bookmark</div>
+            <div className="text-black text-xs mt-1 whitespace-nowrap">
+              Bookmark
+            </div>
           </li>
-          <li className="p-2">
+          <li className="py-5">
             <div className="flex items-center justify-center w-10 h-10  bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <BellOutlined />
             </div>
-            <div className=" text-black text-xs mt-1">Hệ Thống</div>
+            <div className=" text-black text-xs mt-1 whitespace-nowrap">
+              Hệ Thống
+            </div>
           </li>
-          <li className="p-2">
+          <li className="py-5">
             <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <UserOutlined />
             </div>
-            <div className="text-black text-xs mt-1">Tài Khoản</div>
+            <div className="text-black text-xs mt-1 whitespace-nowrap">
+              Tài Khoản
+            </div>
           </li>
-          <li className="p-2">
+          <li className="py-5">
             <div className="flex items-center justify-center w-10 h-10 bg-slate-700/30 rounded-xl relative hover:scale-[1.02]">
               <UndoOutlined />
             </div>
-            <div className="text-black text-xs mt-1 px-1">Hồi đáp</div>
+            <div className="text-black text-xs mt-1 px-1 whitespace-nowrap">
+              Hồi đáp
+            </div>
           </li>
         </ul>
       </div>

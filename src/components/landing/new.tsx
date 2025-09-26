@@ -4,6 +4,7 @@ import {
   CommentOutlined,
   NotificationOutlined,
 } from "@ant-design/icons";
+import { div } from "framer-motion/dist/m";
 import { useState } from "react";
 
 export default function New() {
@@ -60,10 +61,10 @@ export default function New() {
               <div className="text-xs  bg-slate-700/30 rounded-full min-w-[2.5rem] mr-3">
                 {notification.date}
               </div>
-              <div className="flex-1 ">
-                <div className=" text-sm font-medium truncate">
+              <div className="flex-1 truncate">
+                <span className="text-sm font-medium">
                   {notification.title}
-                </div>
+                </span>
               </div>
               <div className="flex items-center space-x-2 ml-2">
                 <span className="text-xs">{notification.count}</span>

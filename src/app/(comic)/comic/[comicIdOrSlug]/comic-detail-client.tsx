@@ -293,7 +293,7 @@ export default function ComicDetailClient({
                   listType="picture-card"
                   className="avatar-uploader"
                   showUploadList={false}
-                  action={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${REQUEST_URLS_V1.UPLOAD}`}
+                  action={`${process.env.NEXT_PUBLIC_BACKEND_URL}${REQUEST_URLS_V1.UPLOAD}`}
                   beforeUpload={beforeUpload}
                   onChange={handleChange}
                   accept="image/*"
@@ -435,7 +435,7 @@ export default function ComicDetailClient({
 
             <div className="w-80">
               <div className="bg-gray-100 h-full rounded-2xl p-2 flex flex-col items-center justify-center gap-8">
-                {comicData?.author?.map((a: any) => (
+                {comicData?.authors?.map((a: any) => (
                   <div
                     key={a.id}
                     className="flex flex-col items-center justify-center gap-4 w-full"

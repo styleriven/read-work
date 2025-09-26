@@ -274,7 +274,7 @@ export default function CreateComicPage() {
                       listType="picture-card"
                       className="avatar-uploader"
                       showUploadList={false}
-                      action={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${REQUEST_URLS_V1.UPLOAD}`}
+                      action={`${process.env.NEXT_PUBLIC_BACKEND_URL}${REQUEST_URLS_V1.UPLOAD}`}
                       beforeUpload={beforeUpload}
                       onChange={handleChange}
                       accept="image/*"
@@ -452,7 +452,7 @@ export default function CreateComicPage() {
                     height={200}
                     src={imageUrl || "/default-cover.png"}
                     alt="Cover preview"
-                    className="rounded-lg object-cover"
+                    className="rounded-lg object-contain"
                   />
                   <div className="mt-4 text-left">
                     <Title level={5} ellipsis className="mb-1">

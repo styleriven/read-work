@@ -44,7 +44,7 @@ export default function ExclusiveComic() {
           Độc quyền
         </h2>
 
-        <div className="w-[200px]">
+        <div className="">
           {comics && comics.length > 0 && (
             <>
               <Image
@@ -56,7 +56,7 @@ export default function ExclusiveComic() {
                 className="object-contain cursor-pointer"
               />
               <p
-                className="text-black truncate w-full"
+                className="text-black truncate w-[200px]"
                 title={comics[currentComic].title}
               >
                 {comics[currentComic].title}
