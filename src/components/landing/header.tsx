@@ -148,7 +148,7 @@ export default function Header({
           <button
             className={` ml-2 cursor-pointer items-center gap-2 justify-center text-white whitespace-nowrap sm:flex ${
               open ? "flex" : "hidden"
-            }`}
+            } `}
           >
             <span>Danh sách</span>
             <FaChevronDown />

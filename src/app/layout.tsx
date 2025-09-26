@@ -134,11 +134,6 @@ export default function RootLayout({
           data-key="aKCA79j8BWVr2k8Kbib9Iw"
           async
         ></script>
-        <script
-          id="WebPush_ID"
-          src="https://cdn.webpush.vn/js/embed.js?id=68d603b7bff203b22b64391b"
-          type="text/javascript"
-        ></script>
       </body>
     </html>
   );
