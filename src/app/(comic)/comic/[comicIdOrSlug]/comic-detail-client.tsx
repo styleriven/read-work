@@ -6,6 +6,7 @@ import {
   CheckOutlined,
   CommentOutlined,
   EyeOutlined,
+  HeartOutlined,
   PlayCircleOutlined,
   StarOutlined,
   UserAddOutlined,
@@ -387,6 +388,19 @@ export default function ComicDetailClient({
                   <EyeOutlined className="w-4 h-4" />
                   {formatNumber(comicData?.stats?.viewsCount)} lượt xem
                 </div>
+
+                <button
+                  // onClick={handleLike}
+                  className={`flex items-center gap-1 transition-colors hover:text-red-500 ${
+                    true ? "text-red-500" : "text-gray-600"
+                  }`}
+                >
+                  <HeartOutlined
+                    className={`w-4 h-4 ${true ? "text-red-500" : ""}`}
+                  />
+                  {formatNumber(100000)} thích
+                </button>
+
                 <div className="flex items-center gap-1">
                   <UserAddOutlined className="w-4 h-4" />
                   {formatNumber(comicData?.stats?.bookmarksCount)} theo dõi
