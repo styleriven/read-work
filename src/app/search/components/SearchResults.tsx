@@ -24,7 +24,6 @@ export default function SearchResults({
       </div>
     );
   }
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {comics?.map((comic) => (
@@ -43,7 +42,7 @@ export default function SearchResults({
               />
               <div className="absolute top-2 right-2">
                 <span className="bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
-                  {comic.comicType.toUpperCase()}
+                  {comic?.comicType?.toUpperCase()}
                 </span>
               </div>
               {/* <div className="absolute bottom-2 left-2">
@@ -84,10 +83,10 @@ export default function SearchResults({
               )}
             </p>
 
-            {comic?.categories.length > 0 && (
+            {comic?.categories?.length > 0 && (
               <div className="mb-3">
                 <div className="flex flex-wrap gap-1">
-                  {comic?.categories.slice(0, 3).map((category: any) => (
+                  {comic?.categories?.slice(0, 3).map((category: any) => (
                     <Link
                       key={category.id}
                       href={`/search?category=${category.id}`}
@@ -106,20 +105,11 @@ export default function SearchResults({
             )}
 
             <div className="flex justify-between text-xs text-gray-500">
+              {comic.chapters[0]?.total || 0} chương
+            </div>
+            <div className="flex justify-between text-xs text-gray-500">
               <span>{comic.stats.viewsCount.toLocaleString()} lượt xem</span>
             </div>
-
-            {comic.stats.avgRating > 0 && (
-              <div className="mt-2 flex items-center">
-                <div className="flex text-yellow-400">
-                  {"★".repeat(Math.floor(comic.stats.avgRating))}
-                  {"☆".repeat(5 - Math.floor(comic.stats.avgRating))}
-                </div>
-                <span className="ml-1 text-xs text-gray-500">
-                  {comic.stats.avgRating.toFixed(1)}
-                </span>
-              </div>
-            )}
           </div>
         </article>
       ))}

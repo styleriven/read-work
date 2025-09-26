@@ -57,7 +57,7 @@ export default function Header({
   }));
 
   function handleClickType(menuItem: any) {
-    console.log("Selected type: " + menuItem.name);
+    route.push(`/search?category=${menuItem.slug}`);
   }
 
   const itemTypes = menuItemTypes.map((item: any, i: number) => ({

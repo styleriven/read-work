@@ -2,6 +2,7 @@ import { IComic } from "@models/interfaces/i-comic";
 import { BaseRepository } from "./base-repository";
 import { ComicModel } from "@models/schemas";
 import { $fetch } from "@/lib/axios";
+import { now } from "mongoose";
 
 class ComicRepository extends BaseRepository<IComic> {
   async findByAuthorId(
@@ -135,29 +136,20 @@ class ComicRepository extends BaseRepository<IComic> {
   async search(filter: any, sort: any, pagination: PaginationOptions = {}) {
     await this.ensureConnection();
     const { page = 1, limit = 10 } = pagination;
-
+    const now = new Date();
     if (sort._id === undefined) {
       sort._id = -1;
     }
 
     const pipeline = [
       { $match: filter },
+
+      { $sort: sort },
       {
-        $project: {
+        $addFields: {
           id: "$_id",
-          title: 1,
-          categories: 1,
-          coverImage: 1,
-          stats: 1,
-          authorId: 1,
-          slug: 1,
-          authorName: 1,
-          categoryId: 1,
-          createdAt: 1,
-          updatedAt: 1,
         },
       },
-      { $sort: sort },
       {
         $facet: {
           data: [
@@ -168,7 +160,7 @@ class ComicRepository extends BaseRepository<IComic> {
                 from: "categories",
                 localField: "categoryId",
                 foreignField: "_id",
-                as: "category",
+                as: "categories",
                 pipeline: [
                   {
                     $project: {
@@ -182,16 +174,23 @@ class ComicRepository extends BaseRepository<IComic> {
             {
               $lookup: {
                 from: "chapters",
-                localField: "Comics",
-                foreignField: "_id",
+                localField: "_id",
+                foreignField: "comicId",
                 as: "chapters",
                 pipeline: [
                   {
-                    $project: {
-                      id: "$_id",
-                      name: 1,
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$deletedAt", null] },
+                          { $lt: ["$publishedAt", now] },
+                          { $eq: [{ $type: "$publishedAt" }, "date"] },
+                        ],
+                      },
                     },
                   },
+
+                  { $count: "total" },
                 ],
               },
             },
