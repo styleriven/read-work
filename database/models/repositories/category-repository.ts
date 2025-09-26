@@ -10,7 +10,7 @@ class CategoryRepository extends BaseRepository<ICategory> {
 
   async getALLSummary(): Promise<{ id: string; name: string }[]> {
     await this.ensureConnection();
-    return await this.model.find().select("id name");
+    return await this.model.find().select("id name slug");
   }
 
   async getCategoryBySlug(

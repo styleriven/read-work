@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { RiArrowLeftWideFill, RiArrowRightWideLine } from "react-icons/ri";
 
 export default function Panel() {
   const [panels] = useState([
@@ -62,7 +63,7 @@ export default function Panel() {
             className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
               md:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity duration-300"
           >
-            ❮
+            <RiArrowLeftWideFill />
           </button>
 
           <button
@@ -70,7 +71,7 @@ export default function Panel() {
             className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full 
                 md:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity duration-300"
           >
-            ❯
+            <RiArrowRightWideLine />
           </button>
         </div>
       </div>

@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { Dropdown, Spin } from "antd";
 import {
-  DownOutlined,
   LoadingOutlined,
   LogoutOutlined,
   MenuOutlined,
@@ -15,6 +14,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useContext, createContext, useState, useEffect, use } from "react";
 import { CategoryQuery } from "@/lib/server/queries/category-query";
+import { FaChevronDown } from "react-icons/fa";
 
 export default function Header({
   className,
@@ -121,7 +121,7 @@ export default function Header({
 
   return (
     <div
-      className={`${className} sticky top-0 z-50 mx-auto py-1 flex flex-col md:flex-row  justify-between items-center w-full h-fit `}
+      className={`${className} sticky top-0 z-50 mx-auto py-1 flex flex-col md:flex-row justify-between items-center w-full h-fit `}
       {...props}
     >
       <div className="flex gap-4 items-start sm:items-center sm:flex-row flex-col w-full mb-2 sm:mb-0">
@@ -151,7 +151,7 @@ export default function Header({
             }`}
           >
             <span>Danh sách</span>
-            <DownOutlined />
+            <FaChevronDown />
           </button>
         </Dropdown>
         <Dropdown menu={{ items: itemTypes }} trigger={["click"]}>
@@ -161,16 +161,16 @@ export default function Header({
             }`}
           >
             <span>Thể loại</span>
-            <DownOutlined />
+            <FaChevronDown />
           </button>
         </Dropdown>
       </div>
       <div
-        className={`gap-4 items-start sm:items-center sm:flex-row flex-col sm:flex w-full ${
+        className={`gap-4 items-start w-full md:w-auto sm:items-center sm:flex-row flex-col sm:flex mx-2 ${
           open ? "flex" : "hidden"
         }`}
       >
-        <div className="flex flex-row items-center w-full sm:w-auto gap-2">
+        <div className="flex flex-row items-center w-[90%] sm:w-auto gap-2 mx-2">
           <input
             className="flex-1 min-w-0 px-4 py-2 bg-white/5 text-white border border-white/20 rounded-xl 
         placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-purple-500 
@@ -205,24 +205,24 @@ export default function Header({
             <Dropdown
               menu={{ items: userItems }}
               trigger={["click"]}
-              className="ml-2"
+              className="mx-2"
             >
               <button className="flex items-center gap-2 justify-center cursor-pointer text-white whitespace-nowrap">
                 <span>Xin chào, {user.userName || user.email}</span>
-                <DownOutlined />
+                <FaChevronDown />
               </button>
             </Dropdown>
           ) : (
             <>
               <Link
                 href={`/login?callbackUrl=${encodeURIComponent(pathname)}`}
-                className="bg-green-500 text-white text-center px-4 py-2 rounded hover:bg-green-600 whitespace-nowrap"
+                className="bg-green-500 text-white text-center px-4 py-2 hover:bg-green-600 whitespace-nowrap duration-200 rounded-xl"
               >
                 Đăng nhập
               </Link>
               <Link
                 href={"/register"}
-                className="bg-green-500 text-white px-4 mr-10 py-2 rounded hover:bg-green-600 whitespace-nowrap"
+                className="bg-green-500 text-white px-4 mr-10 py-2 rounded-xl hover:bg-green-600 whitespace-nowrap duration-200 "
               >
                 Đăng ký
               </Link>

@@ -151,7 +151,7 @@ export default function SearchFilters({
             size="middle"
           >
             {filterOptions.categories?.map((category) => (
-              <Option key={category.id} value={category.id}>
+              <Option key={category.id} value={category.slug}>
                 {category.name}
               </Option>
             ))}

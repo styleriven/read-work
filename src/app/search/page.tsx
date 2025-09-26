@@ -9,6 +9,7 @@ import { ComicQuery } from "@/lib/server/queries/comic-query";
 import { SearchFilterOptions, SearchPageProps } from "@/types/search";
 import { Breadcrumb } from "@/components/common/breadcrumb";
 import { CollapsibleSidebar } from "./components/CollapsibleSidebar";
+import { map } from "zod";
 
 export async function generateMetadata({
   searchParams,
@@ -219,14 +220,21 @@ async function getSearchData(
         ([_, value]) => value !== undefined && value !== ""
       )
     );
-
+    const filtersData = await ComicQuery.getFilterOptions();
+    const allowedCategories = new Set(
+      cleanParams?.categories?.split(",") ?? []
+    );
+    if (allowedCategories.size > 0) {
+      cleanParams.categories = filtersData.filterOptions?.categories
+        .filter((cat: any) => allowedCategories.has(cat.slug))
+        .map((c: any) => c.id);
+    }
     const queryString = new URLSearchParams(
       cleanParams as Record<string, string>
     ).toString();
 
-    const [searchData, filtersData] = await Promise.all([
+    const [searchData] = await Promise.all([
       ComicQuery.searchComics(queryString),
-      ComicQuery.getFilterOptions(),
     ]);
 
     if (!searchData) {

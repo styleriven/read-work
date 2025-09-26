@@ -102,7 +102,7 @@ class ComicAction {
       }
 
       // Category filter
-      if (query.categories) {
+      if (query.categories && query.categories.size > 0) {
         filter.categoryId = { $in: query.categories };
       }
 
