@@ -2,6 +2,7 @@ import { slugify } from "@/lib/uitls/utils";
 import { IComic } from "@models/interfaces/i-comic";
 import comicRepository from "@models/repositories/comic-repository";
 import { HttpStatusCode } from "axios";
+import console from "console";
 import { ApiError } from "next/dist/server/api-utils";
 import { v4 } from "uuid";
 
@@ -102,7 +103,7 @@ class ComicAction {
       }
 
       // Category filter
-      if (query.categories && query.categories.size > 0) {
+      if (query.categories && query.categories.length > 0) {
         filter.categoryId = { $in: query.categories };
       }
 

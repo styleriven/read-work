@@ -67,9 +67,9 @@ export default function LastResort({
         href={`/comic/${comics[0]?.slug}`}
         className="flex items-start gap-3 mb-4"
       >
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <h3
-            className="text-sm text-left font-medium text-gray-800 mb-1 line-clamp-1 truncate"
+            className="text-sm text-left font-medium text-gray-800 mb-1 truncate"
             title={comics[0]?.title}
           >
             {comics[0]?.title}
@@ -86,11 +86,11 @@ export default function LastResort({
           </div>
         </div>
 
-        <div className="w-[60px] h-[80px] bg-gradient-to-br from-pink-100 to-red-100 rounded-md flex items-center justify-center overflow-hidden">
+        <div className="flex-shrink-0 w-[60px] h-[80px] bg-gradient-to-br from-pink-100 to-red-100 rounded-md overflow-hidden">
           <img
             src={comics[0]?.coverImage ?? "/default-cover.png"}
             alt={comics[0]?.title ?? "Book cover"}
-            className="w-full h-full object-cover rounded-md"
+            className="w-full h-full object-cover"
           />
         </div>
       </Link>
@@ -101,7 +101,7 @@ export default function LastResort({
           <Link
             key={comic._id}
             href={`/comic/${comic.slug}`}
-            className="flex items-center justify-between group hover:bg-gray-50 -mx-2 px-2 py-2 rounded transition-colors cursor-pointer border-t border-gray-100"
+            className="flex items-center justify-between group hover:bg-gray-50 -mx-2 px-2 py-2 rounded transition-colors cursor-pointer border-t border-gray-100 "
             title={comic.title}
           >
             <div className="flex-1 pr-3 truncate" title={comic.title}>
