@@ -1,8 +1,6 @@
 import comicAction from "@/lib/server/action/comic-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
-import { slugify } from "@/lib/uitls/utils";
 import { withAuth } from "@/middleware/auth";
-import context from "antd/es/app/context";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 

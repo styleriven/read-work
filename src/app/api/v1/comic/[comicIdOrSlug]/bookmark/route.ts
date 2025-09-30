@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { comicIdOrSlug: string } }
+  context: { params: Promise<{ comicIdOrSlug: string }> }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const auth = await withAuth([])(req);
@@ -16,7 +16,7 @@ export const GET = async (
         { status: auth.status }
       );
     }
-    const { comicIdOrSlug } = await params;
+    const { comicIdOrSlug } = await context.params;
     if (!comicIdOrSlug)
       return NextResponse.json(
         { message: "Comic ID or Slug are required" },
