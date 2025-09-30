@@ -3,12 +3,11 @@ import { UserOutlined, SettingOutlined, BookOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import ChapterNavigation from "../chapter-navigation";
 import Loading from "@/components/ui/loading";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { generateComicUrl } from "@/lib/uitls/seo";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { Breadcrumb } from "@/components/common/breadcrumb";
-import { div } from "framer-motion/dist/m";
 
 interface ChapterDetailClientProps {
   initialChapter: {
@@ -117,6 +116,7 @@ export default function ChapterDetailClient({
         type="chapter"
         breadcrumbs={breadcrumbs}
       />
+
       <div className="flex-grow bg-gray-50">
         {/* Header */}
         <div className="bg-white shadow-sm border-b">

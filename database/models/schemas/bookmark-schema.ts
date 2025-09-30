@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import { IBookmark } from "../interfaces/i-bookmark";
-import { v4 } from "uuid";
 
 const bookmarkSchema = new Schema<IBookmark>(
   {

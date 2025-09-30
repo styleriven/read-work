@@ -1,8 +1,6 @@
 import { IComic } from "@models/interfaces/i-comic";
 import { BaseRepository } from "./base-repository";
 import { ComicModel } from "@models/schemas";
-import { $fetch } from "@/lib/axios";
-import { now } from "mongoose";
 
 class ComicRepository extends BaseRepository<IComic> {
   async findByAuthorId(

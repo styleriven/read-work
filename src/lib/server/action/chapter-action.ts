@@ -1,5 +1,6 @@
 import { slugify } from "@/lib/uitls/utils";
 import { IChapter } from "@models/interfaces/i-chapter";
+import bookmarkRepository from "@models/repositories/bookmark-repository";
 import chapterRepository from "@models/repositories/chapter-repository";
 import comicRepository from "@models/repositories/comic-repository";
 import { HttpStatusCode } from "axios";
@@ -105,11 +106,18 @@ class ChapterAction {
     }
   }
 
-  async getChapterByIdOrSlug(chapterIdOrSlug: string) {
+  async getChapterByIdOrSlug(chapterIdOrSlug: string, userId?: string) {
     try {
       const data = await chapterRepository.findChapterWithNeighbors(
         chapterIdOrSlug
       );
+      if (data?.chapter && userId) {
+        bookmarkRepository.createOrUpdate({
+          userId,
+          comicId: data.chapter.comicId,
+          chapterId: data.chapter._id,
+        });
+      }
       return data;
     } catch (error) {
       console.error("Error fetching chapter by ID:", error);

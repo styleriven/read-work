@@ -17,7 +17,7 @@ const userSchema = new Schema<IUser>(
       match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: { type: String, minlength: 6 },
-    avatar: { type: String, default: null },
+    avatar: { type: String, default: "/default-avatar.png" },
     displayName: { type: String, trim: true, maxlength: 50 },
     bio: { type: String, maxlength: 500 },
     role: { type: Number, enum: [1, 2, 3], default: 3 },

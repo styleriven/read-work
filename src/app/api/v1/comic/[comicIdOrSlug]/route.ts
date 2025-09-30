@@ -11,7 +11,6 @@ export const GET = async (
   context: { params: Promise<{ comicIdOrSlug: string }> }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
-    console.time("Get comic by ID or slug");
     const { comicIdOrSlug } = await context.params;
     if (!comicIdOrSlug)
       return NextResponse.json(
@@ -22,7 +21,6 @@ export const GET = async (
       );
 
     const comic = await comicAction.getComic(comicIdOrSlug);
-    console.timeEnd("Get comic by ID or slug");
     return NextResponse.json(comic, {
       status: HttpStatusCode.Ok,
     });

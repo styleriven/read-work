@@ -1,6 +1,8 @@
 import { ChapterModel } from "@models/schemas";
 import { BaseRepository } from "./base-repository";
 import { IChapter } from "@models/interfaces/i-chapter";
+import { SortOrder } from "mongoose";
+
 class ChapterRepository extends BaseRepository<IChapter> {
   async findByComicId(
     comicId: string,
@@ -8,21 +10,25 @@ class ChapterRepository extends BaseRepository<IChapter> {
     pagination: PaginationOptions = {}
   ) {
     await this.ensureConnection();
+
     const { page = 1, limit = 10 } = pagination;
-    const filter: any = {
+
+    const filter: Record<string, any> = {
       comicId,
       deletedAt: null,
+      ...(q ? { title: { $regex: q, $options: "i" } } : {}),
     };
-    if (q) {
-      filter.title = { $regex: q, $options: "i" };
-    }
-    const totalCount = await this.model.countDocuments(filter).exec();
-    const skip = (page - 1) * limit;
-    const chapters = await this.model
-      .find(filter)
-      .skip(skip)
-      .limit(limit)
-      .exec();
+
+    const [totalCount, chapters] = await Promise.all([
+      this.model.countDocuments(filter),
+      this.model
+        .find(filter)
+        .sort({ createdAt: -1, _id: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec(),
+    ]);
+
     return {
       data: chapters,
       totalCount,

@@ -47,7 +47,8 @@ export class ChapterQuery {
 
   static async getChapterById(
     comicId: string,
-    chapterId: string
+    chapterId: string,
+    userId: string | null = null
   ): Promise<{
     chapter: any;
     comic?: {
@@ -62,7 +63,9 @@ export class ChapterQuery {
     nextChapter?: { id: string; name?: string };
   }> {
     const response = await $globalFetch.get(
-      `${REQUEST_URLS_V1.COMIC}/${comicId}/chapter/${chapterId}`
+      `${REQUEST_URLS_V1.COMIC}/${comicId}/chapter/${chapterId}?userId=${
+        userId || ""
+      }`
     );
     return response.data;
   }

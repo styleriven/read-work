@@ -1,6 +1,6 @@
 "use client";
 import { Mentions, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ModalSendComment({
   id,
@@ -31,12 +31,19 @@ export default function ModalSendComment({
   ];
 
   const [content, setContent] = useState("");
+  const mentionsRef = useRef<any>(null);
   const [userMentions, setUserMentions] = useState<string[]>([]);
   function handleOk() {
     if (content === null || content === "") {
       return;
     }
     onOk(content, id, name);
+    handleCancel();
+  }
+  function handleCancel() {
+    setContent("");
+    setUserMentions([]);
+    onCancel();
   }
 
   function HandleChangeComment(value: string) {
@@ -53,7 +60,12 @@ export default function ModalSendComment({
       onOk={handleOk}
       okText="Gửi"
       cancelText="Hủy"
-      onCancel={onCancel}
+      onCancel={handleCancel}
+      afterOpenChange={(open) => {
+        if (open && mentionsRef.current) {
+          mentionsRef.current.focus();
+        }
+      }}
     >
       <div className="flex flex-col gap-2">
         <p className="text-sm text-gray-600">
@@ -66,10 +78,18 @@ export default function ModalSendComment({
           )}
         </p>
         <Mentions
+          ref={mentionsRef}
           options={options}
-          className="w-full"
+          className="w-full text-base"
           autoSize={{ minRows: 1, maxRows: 6 }}
           placeholder="Nhập bình luận của bạn"
+          value={content}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleOk();
+            }
+          }}
           onChange={(value) => {
             HandleChangeComment(value);
           }}

@@ -355,12 +355,15 @@ export default function EditComicPage() {
         await ChapterQuery.updateChapter(editingChapter.id, updatedChapter);
 
         setChapters((prev) =>
-          prev.map((chapter) =>
-            chapter.id === editingChapter.id
-              ? ({ ...chapter, ...values } as IChapter)
-              : chapter
-          )
+          prev.some((c) => c.id === editingChapter.id)
+            ? prev.map((c) =>
+                c.id === editingChapter.id
+                  ? ({ ...c, ...values } as IChapter)
+                  : c
+              )
+            : [{ ...editingChapter, ...values } as IChapter, ...prev]
         );
+
         notify({
           type: "success",
           title: "Thành công",
@@ -374,7 +377,7 @@ export default function EditComicPage() {
         };
         const createdChapter = await ChapterQuery.createChapter(newChapterData);
 
-        setChapters((prev) => [...prev, createdChapter]);
+        setChapters((prev) => [createdChapter, ...prev]);
         setTotalChapters((prev) => prev + 1);
         notify({
           type: "success",

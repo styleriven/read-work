@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import { IComment } from "../interfaces/i-comment";
-import { v4 } from "uuid";
 
 const commentSchema = new Schema<IComment>(
   {
@@ -39,12 +38,6 @@ const commentSchema = new Schema<IComment>(
       type: String,
       ref: "User",
       default: null,
-    },
-    level: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 5,
     },
 
     isEdited: {

@@ -3,6 +3,8 @@ import ChapterDetailClient from "./chapter-detail-client";
 import { cache } from "react";
 import { generateSEOMetadata } from "@/lib/seo";
 import { generateChapterUrl } from "@/lib/uitls/seo";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/server/auth";
 
 interface ComicPageProps {
   params: { comicIdOrSlug: string; chapterIdOrSlug: string };
@@ -11,7 +13,14 @@ interface ComicPageProps {
 const getChapterById = cache(
   async (comicIdOrSlug: string, chapterIdOrSlug: string) => {
     try {
-      return await ChapterQuery.getChapterById(comicIdOrSlug, chapterIdOrSlug);
+      const session = await getServerSession(authOptions);
+
+      const user = session?.user || null;
+      return await ChapterQuery.getChapterById(
+        comicIdOrSlug,
+        chapterIdOrSlug,
+        user?.id
+      );
     } catch (error) {
       console.error("Error fetching chapter details:", error);
       return null;

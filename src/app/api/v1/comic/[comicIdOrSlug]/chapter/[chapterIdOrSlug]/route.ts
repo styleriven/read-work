@@ -2,6 +2,7 @@ import { chapterAction } from "@/lib/server/action/chapter-action";
 import { handleApiRequest } from "@/lib/uitls/handle-api-request";
 import { withAuth } from "@/middleware/auth";
 import { HttpStatusCode } from "axios";
+import console from "console";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PUT = async (
@@ -51,11 +52,16 @@ export const PUT = async (
 export const GET = async (
   req: NextRequest,
   context: {
-    params: Promise<{ comicIdOrSlug: string; chapterIdOrSlug: string }>;
+    params: Promise<{
+      comicIdOrSlug: string;
+      chapterIdOrSlug: string;
+    }>;
   }
 ): Promise<NextResponse> => {
   return handleApiRequest(async () => {
     const { chapterIdOrSlug } = await context.params;
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId") || undefined;
     if (!chapterIdOrSlug)
       return NextResponse.json(
         { message: "Chapter ID or Slug are required" },
@@ -63,7 +69,10 @@ export const GET = async (
           status: HttpStatusCode.BadRequest,
         }
       );
-    const data = await chapterAction.getChapterByIdOrSlug(chapterIdOrSlug);
+    const data = await chapterAction.getChapterByIdOrSlug(
+      chapterIdOrSlug,
+      userId
+    );
     if (!data?.chapter) {
       return NextResponse.json(
         { message: "Chapter not found" },

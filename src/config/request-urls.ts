@@ -17,6 +17,7 @@ export const REQUEST_URLS = {
     MY_COMIC: "/v1/comic/my-comic",
     COMIC: "/v1/comic",
     SEARCH_COMICS: "/v1/comic/search",
+    COMMENT: "/v1/comment",
   },
 };
 

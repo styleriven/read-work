@@ -1,5 +1,5 @@
 "use client";
-import Avatar from "@/components/ui/avater";
+import Avatar from "@/components/ui/avatar";
 import ComicCardHorizontal from "@/components/ui/comic-card-horizontal";
 import {
   BookOutlined,
@@ -22,7 +22,6 @@ import {
 import { useState, useEffect, use } from "react";
 import CommentCard from "../comment-card";
 import ModalSendComment from "../../modal-send-comment";
-import { useParams } from "next/navigation";
 import { ComicQuery } from "@/lib/server/queries/comic-query";
 import Loading from "@/components/ui/loading";
 import { useSession } from "next-auth/react";
@@ -31,11 +30,10 @@ import { notify } from "@/components/ui/notify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChapterQuery } from "@/lib/server/queries/chapter-query";
-import page from "./page";
-import { formatNumber } from "@/lib/uitls/utils";
+import { formatNumber, timeAgo } from "@/lib/uitls/utils";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { Breadcrumb } from "@/components/common/breadcrumb";
-import { div } from "framer-motion/dist/m";
+import { CommentQuery } from "@/lib/server/queries/comment-query";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -57,76 +55,11 @@ export default function ComicDetailClient({
   const router = useRouter();
   const { data: session, status } = useSession();
   const user = session?.user;
-  const comments = [
-    {
-      id: "1",
-      name: "Nguyễn Văn A",
-      imageUrl: "https://i.pravatar.cc/150?u=a",
-      time: "1 ngày trước",
-      content:
-        "Đây là bình luận đầu tiên. Hy vọng có thêm nhiều bình luận và tương tác!",
-      replies: [
-        {
-          id: "11",
-          name: "Trần Thị B",
-          imageUrl: "https://i.pravatar.cc/150?u=b",
-          time: "1 ngày trước",
-          content: "Mình đồng ý! Nội dung rất hay.",
-          replies: [
-            {
-              id: "111",
-              name: "Phạm Văn G",
-              imageUrl: "https://i.pravatar.cc/150?u=g",
-              time: "5 giờ trước",
-              content: "Cảm ơn bạn đã chia sẻ quan điểm!",
-              replies: [
-                {
-                  id: "11",
-                  name: "Trần Thị B",
-                  imageUrl: "https://i.pravatar.cc/150?u=b",
-                  time: "1 ngày trước",
-                  content: "Mình đồng ý! Nội dung rất hay.",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: "12",
-          name: "Lê Văn C",
-          imageUrl: "https://i.pravatar.cc/150?u=c",
-          time: "20 giờ trước",
-          content: "Mình cũng thấy vậy. Cảm ơn vì bài viết nhé!",
-        },
-      ],
-    },
-    {
-      id: "2",
-      name: "Phạm Thu D",
-      imageUrl: "https://i.pravatar.cc/150?u=d",
-      time: "12 giờ trước",
-      content: "Nội dung rất ý nghĩa. Cảm ơn tác giả!",
-      replies: [],
-    },
-    {
-      id: "3",
-      name: "Vũ Thị E",
-      imageUrl: "https://i.pravatar.cc/150?u=e",
-      time: "2 giờ trước",
-      content: "Có ai biết cách làm việc này không? Rất mong được giúp đỡ.",
-      replies: [
-        {
-          id: "31",
-          name: "Hoàng Văn F",
-          imageUrl: "https://i.pravatar.cc/150?u=f",
-          time: "1 giờ trước",
-          content:
-            "Chào bạn, bạn có thể tham khảo tài liệu này nhé: [liên kết tới tài liệu]",
-        },
-      ],
-    },
-  ];
-
+  const [comments, setComments] = useState<any[]>([]);
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
+  const [totalComments, setTotalComments] = useState(0);
+  const [pageComment, setPageComment] = useState(1);
+  const [limitComment, setLimitComment] = useState(10);
   const [breadcrumbs, setBreadcrumbs] = useState([
     { name: "Trang chủ", url: "/" },
     { name: comicData?.title },
@@ -174,9 +107,27 @@ export default function ComicDetailClient({
     }
   };
 
+  const fetchComments = async () => {
+    try {
+      setIsLoadingComments(true);
+      const data = await CommentQuery.getCommentsByTargetId(
+        initialComic.id,
+        pageComment,
+        limitComment
+      );
+      setComments(data?.comments || []);
+      setTotalComments(data?.totalCount || 0);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
   useEffect(() => {
     if (initialComic?.id) {
       fetchChapters();
+      fetchComments();
     }
   }, [pageChapter, limitChapter, initialComic?.id]);
 
@@ -196,8 +147,87 @@ export default function ComicDetailClient({
 
   const [modalSendCommentOpen, setModalSendCommentOpen] = useState(false);
 
-  function SendComment(content: string, id?: string, name?: string) {
-    alert(`Bình luận về ID: ${id}, Tên: ${name}, Nội dung: ${content}`);
+  async function SendComment(content: string, id?: string, name?: string) {
+    if (!user) return;
+
+    let newComment = await CommentQuery.createComment({
+      targetId: initialComic.id,
+      targetType: "Comic",
+      comicId: comicData.id,
+      authorId: user.id,
+      content,
+      parentCommentId: id,
+    });
+
+    newComment.author = {
+      id: user.id,
+      userName: user.userName,
+      email: user.email,
+      avatar: user.avatar,
+    };
+
+    function addReplyRecursive(comments: any[], newReply: any): any[] {
+      return comments.map((comment) => {
+        if (comment.id === newReply.parentCommentId) {
+          return {
+            ...comment,
+            replies: [newReply, ...(comment.replies || [])],
+          };
+        } else if (comment.replies && comment.replies.length > 0) {
+          return {
+            ...comment,
+            replies: addReplyRecursive(comment.replies, newReply),
+          };
+        }
+        return comment;
+      });
+    }
+
+    if (newComment.parentCommentId) {
+      setComments((prevComments) =>
+        addReplyRecursive(prevComments, newComment)
+      );
+    } else {
+      setComments((prevComments) => [newComment, ...prevComments]);
+    }
+
+    setTotalComments((prev) => prev + 1);
+
+    notify({
+      type: "success",
+      title: "Bình luận thành công",
+      description: "Bình luận của bạn đã được gửi thành công!",
+    });
+
+    setTimeout(() => {
+      const el = document.getElementById(`comment-${newComment.id}`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  }
+
+  async function getCommentMore() {
+    try {
+      if (isLoadingComments) return;
+
+      setIsLoadingComments(true);
+      const data = await CommentQuery.getCommentsByTargetId(
+        initialComic.id,
+        pageComment + 1,
+        limitComment
+      );
+      setComments((prevComments) => [
+        ...prevComments,
+        ...(data?.comments || []),
+      ]);
+      if (data.comments && data.comments.length > 0) {
+        setPageComment((prev) => prev + 1);
+        setTotalComments(data?.totalCount || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setIsLoadingComments(false);
+    }
   }
 
   function OpenModalSendMail(id?: string, name?: string) {
@@ -238,6 +268,32 @@ export default function ComicDetailClient({
 
   function CloseModalSendMail() {
     setModalSendCommentOpen(false);
+  }
+
+  async function handleReadContinue() {
+    if (chapters.length === 0) {
+      notify({
+        title: "Truyện hiện chưa có chương nào",
+        description: "Vui lòng quay lại sau",
+        type: "info",
+      });
+      return;
+    }
+
+    let targetChapterSlug = chapters[0].slug;
+
+    if (user) {
+      try {
+        const bookmark = await ComicQuery.getBookmarkedComic(initialComic.id);
+        if (bookmark?.chapter?.slug) {
+          targetChapterSlug = bookmark?.chapter?.slug;
+        }
+      } catch (error) {
+        console.error("Error fetching bookmark:", error);
+      }
+    }
+
+    router.push(`/comic/${initialComic.slug}/chapter/${targetChapterSlug}`);
   }
 
   if (isLoading) {
@@ -325,9 +381,14 @@ export default function ComicDetailClient({
               )}
 
               <div className="mt-3 flex gap-2">
-                <button className="flex-1 bg-cyan-500 text-white py-2 px-4 rounded-lg hover:bg-cyan-600 transition-colors flex items-center justify-center gap-2">
+                <button
+                  className="flex-1 bg-cyan-500 text-white py-2 px-4 rounded-lg hover:bg-cyan-600 transition-colors flex items-center justify-center gap-2"
+                  onClick={() => {
+                    handleReadContinue();
+                  }}
+                >
                   <PlayCircleOutlined className="w-4 h-4" />
-                  Đọc Truyện
+                  Đọc Tiếp
                 </button>
                 {comicData?.authorId.includes(user?.id) && (
                   <Link href={`/comic/${comicData.slug}/edit`} passHref>
@@ -435,16 +496,16 @@ export default function ComicDetailClient({
 
             <div className="w-80">
               <div className="bg-gray-100 h-full rounded-2xl p-2 flex flex-col items-center justify-center gap-8">
-                {comicData?.authors?.map((a: any) => (
+                {comicData?.authors?.map((a: any, i: number) => (
                   <div
-                    key={a.id}
+                    key={i}
                     className="flex flex-col items-center justify-center gap-4 w-full"
                   >
                     <Avatar
                       className=""
                       width={80}
                       height={80}
-                      imageUrl={a.avatar}
+                      imageUrl={a.avatar || "/default-avatar.png"}
                       preview={true}
                     />
                     <span className="text-sm text-gray-600">
@@ -536,22 +597,42 @@ export default function ComicDetailClient({
                 className="flex flex-col gap-1 bg-white rounded-lg shadow-sm mt-6 p-4"
               >
                 <h3 className="text-black font-semibold mb-4 flex items-center gap-2">
-                  Bình Luận {`(49)`}
+                  Bình Luận ({totalComments})
                 </h3>
                 {comments.map((comment) => (
                   <CommentCard
                     id={comment.id}
                     key={comment.id}
-                    imageUrl={comment.imageUrl}
-                    name={comment.name}
-                    time={comment.time}
+                    imageUrl={comment?.author?.avatar || "/default-avatar.png"}
+                    name={comment?.author?.userName || comment?.author?.email}
+                    time={timeAgo(comment.createdAt)}
+                    user={user}
                     content={comment.content}
                     replies={comment.replies}
                     onReplyClick={OpenModalSendMail}
                   />
                 ))}
-                <div className="mt-4 flex justify-center">
-                  <button className="text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-600 p-1 rounded-lg transition-colors cursor-pointer ">
+                {isLoadingComments && (
+                  <div className="w-full flex justify-center items-center">
+                    <Loading />
+                  </div>
+                )}
+
+                <div className="mt-4 flex justify-around">
+                  {user && (
+                    <button
+                      className="text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-600 p-1 rounded-lg transition-colors cursor-pointer "
+                      onClick={() => OpenModalSendMail()}
+                    >
+                      Thêm Bình Luận
+                    </button>
+                  )}
+                  <button
+                    className="text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-600 p-1 rounded-lg transition-colors cursor-pointer"
+                    onClick={() => {
+                      getCommentMore();
+                    }}
+                  >
                     Xem Thêm Bình Luận
                   </button>
                 </div>

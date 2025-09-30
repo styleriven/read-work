@@ -69,7 +69,7 @@ export default function Profile() {
       try {
         const data = await UserQuery.getFullUser(user.id);
         setUserData(data);
-        setImageUrl(data?.avatar || undefined);
+        setImageUrl(data?.avatar || "/default-avatar.png");
         setBio(data?.bio || "");
         setUserName(data?.userName || "");
         setDisplayName(data?.displayName || "");

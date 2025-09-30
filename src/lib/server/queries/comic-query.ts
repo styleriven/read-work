@@ -84,4 +84,12 @@ export class ComicQuery {
     );
     return response.data;
   }
+
+  static async getBookmarkedComic(ComicId: string) {
+    const response = await $fetch.get(
+      `${REQUEST_URLS_V1.COMIC}/${ComicId}/bookmark`
+    );
+
+    return response.data;
+  }
 }
