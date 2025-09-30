@@ -10,7 +10,7 @@ export const REQUEST_URLS = {
     SET_FORGOT_PASSWORD: "/v1/auth/set-forgot-password",
     VERIFY_EMAIL: "/v1/auth/verify-email",
     VERIFY_FORGOT_PASSWORD: "/v1/auth/verify-forgot-password",
-    UPLOAD: "/v1/upload",
+    UPLOAD: `${process.env.NEXT_PUBLIC_BACKEND_URL}/v1/upload`,
     USER: "/v1/user",
     CREATE_COMIC: "/v1/comic/create",
     CATEGORY: "/v1/category",

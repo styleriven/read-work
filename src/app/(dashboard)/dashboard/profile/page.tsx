@@ -219,7 +219,7 @@ export default function Profile() {
                           listType="picture-card"
                           className="avatar-uploader"
                           showUploadList={false}
-                          action={`${process.env.NEXT_PUBLIC_BACKEND_URL}${REQUEST_URLS_V1.UPLOAD}`}
+                          action={`$h{REQUEST_URLS_V1.UPLOAD}`}
                           beforeUpload={beforeUpload}
                           onChange={handleChange}
                           accept="image/*"

@@ -594,7 +594,7 @@ export default function EditComicPage() {
                       listType="picture-card"
                       className="avatar-uploader"
                       showUploadList={false}
-                      action={`${process.env.NEXT_PUBLIC_BACKEND_URL}${REQUEST_URLS_V1.UPLOAD}`}
+                      action={`${REQUEST_URLS_V1.UPLOAD}`}
                       beforeUpload={beforeUpload}
                       onChange={handleChange}
                       accept="image/*"
