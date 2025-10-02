@@ -12,12 +12,10 @@ import {
   LockOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-import LayoutMain from "../Layout/layout-main";
 import { notify } from "../ui/notify";
 import { signIn } from "next-auth/react";
 import { AuthQuery } from "@/lib/server/queries/auth-query";
 import { Spin } from "antd";
-import { div } from "framer-motion/dist/m";
 
 const loginSchema = z.object({
   email: z
@@ -347,6 +345,7 @@ export default function UserAuthForm({
                 type="button"
                 className="flex items-center justify-center px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/20 
                   rounded-xl transition-all duration-200 hover:border-white/40 group"
+                onClick={() => signIn("facebook")}
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path
@@ -362,6 +361,7 @@ export default function UserAuthForm({
                 type="button"
                 className="flex items-center justify-center px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/20 
                   rounded-xl transition-all duration-200 hover:border-white/40 group"
+                onClick={() => signIn("google")}
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path

@@ -1,31 +1,28 @@
-import { type GetServerSidePropsContext } from "next";
-import {
-  getServerSession,
-  type NextAuthOptions,
-  type DefaultSession,
-} from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { IToken } from "@/types/token";
-import { $fetch, $globalFetch } from "@/lib/axios";
-import { IUser } from "@/types/user";
-import UserRole from "@/enums/Role";
-import { REQUEST_URLS_V1 } from "@/config/request-urls";
+import { type GetServerSidePropsContext } from 'next'
+import { getServerSession, type NextAuthOptions, type DefaultSession } from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
+import FacebookProvider from 'next-auth/providers/facebook'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { IToken } from '@/types/token'
+import { $fetch, $globalFetch } from '@/lib/axios'
+import { IUser } from '@/types/user'
+import UserRole from '@/enums/Role'
+import { REQUEST_URLS_V1 } from '@/config/request-urls'
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
  */
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
-    user: DefaultSession["user"] & User;
-    accessToken: IToken | null;
-    refreshToken: IToken | null;
-    error?: string;
+    user: DefaultSession['user'] & User
+    accessToken: IToken | null
+    refreshToken: IToken | null
+    error?: string
   }
 
   interface User extends IUser {
-    userRole: UserRole;
-    userId: string | number;
+    userRole: UserRole
+    userId: string | number
   }
 }
 
@@ -33,13 +30,11 @@ declare module "next-auth" {
  * Check if token is expired with configurable buffer time
  */
 function isTokenExpired(token: IToken): boolean {
-  const expires = token?.expires ? new Date(token.expires) : null;
+  const expires = token?.expires ? new Date(token.expires) : null
   if (!expires || isNaN(expires.getTime())) {
-    return true;
+    return true
   }
-  return (
-    Math.floor(expires.getTime() / 1000) < Math.floor(Date.now() / 1000) + 300
-  );
+  return Math.floor(expires.getTime() / 1000) < Math.floor(Date.now() / 1000) + 300
 }
 
 /**
@@ -49,19 +44,19 @@ async function refreshAccessToken(token: any) {
   if (!token.refreshToken?.token) {
     return {
       ...token,
-      error: "RefreshAccessTokenError",
-    };
+      error: 'RefreshAccessTokenError',
+    }
   }
 
   try {
     const response = await $globalFetch.post(REQUEST_URLS_V1.REFRESH_TOKEN, {
       refresh_token: token.refreshToken.token,
-    });
+    })
 
-    const refreshedTokens = response.data;
+    const refreshedTokens = response.data
 
     if (!refreshedTokens?.tokens?.access || !refreshedTokens?.tokens?.refresh) {
-      throw new Error("Invalid token response structure");
+      throw new Error('Invalid token response structure')
     }
 
     return {
@@ -69,24 +64,24 @@ async function refreshAccessToken(token: any) {
       accessToken: refreshedTokens.tokens.access,
       refreshToken: refreshedTokens.tokens.refresh,
       error: undefined,
-    };
+    }
   } catch (error: any) {
-    console.error("Error refreshing access token:", {
+    console.error('Error refreshing access token:', {
       message: error.message,
       status: error.response?.status,
       data: error.response?.data,
-    });
+    })
 
     // If refresh token is invalid or expired
     if (error.response?.status === 401 || error.response?.status === 403) {
       return {
         ...token,
-        error: "RefreshAccessTokenError",
-      };
+        error: 'RefreshAccessTokenError',
+      }
     }
 
     // For network errors, keep the token and try again later
-    return token;
+    return token
   }
 }
 
@@ -96,21 +91,21 @@ async function refreshAccessToken(token: any) {
 function validateRedirectUrl(url: string, baseUrl: string): string {
   try {
     // Handle relative URLs
-    if (url.startsWith("/")) {
-      return `${baseUrl}${url}`;
+    if (url.startsWith('/')) {
+      return `${baseUrl}${url}`
     }
 
-    const urlObj = new URL(url);
-    const baseUrlObj = new URL(baseUrl);
+    const urlObj = new URL(url)
+    const baseUrlObj = new URL(baseUrl)
 
     // Only allow same origin redirects
-    if (urlObj.origin === baseUrlObj.origin && !url.includes("/login")) {
-      return url;
+    if (urlObj.origin === baseUrlObj.origin && !url.includes('/login')) {
+      return url
     }
 
-    return baseUrl;
+    return baseUrl
   } catch {
-    return baseUrl;
+    return baseUrl
   }
 }
 
@@ -119,51 +114,90 @@ function validateRedirectUrl(url: string, baseUrl: string): string {
  */
 export const authOptions: NextAuthOptions = {
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
     maxAge: 24 * 60 * 60, // 24 hours
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: '/login',
+    error: '/login',
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      if (url.includes("login?callbackUrl")) {
+      if (url.includes('login?callbackUrl')) {
         try {
-          const callbackUrl = new URL(url).searchParams.get("callbackUrl");
+          const callbackUrl = new URL(url).searchParams.get('callbackUrl')
           if (callbackUrl) {
-            return validateRedirectUrl(callbackUrl, baseUrl);
+            return validateRedirectUrl(callbackUrl, baseUrl)
           }
         } catch {}
       }
 
-      return validateRedirectUrl(url, baseUrl);
+      return validateRedirectUrl(url, baseUrl)
     },
 
     async session({ session, token }) {
-      if (token.error === "RefreshAccessTokenError") {
-        session.error = "RefreshAccessTokenError";
+      if (token.error === 'RefreshAccessTokenError') {
+        session.error = 'RefreshAccessTokenError'
       }
-      session.accessToken = token?.accessToken as IToken;
-      session.refreshToken = token?.refreshToken as IToken;
+      session.accessToken = token?.accessToken as IToken
+      session.refreshToken = token?.refreshToken as IToken
       if (session?.user && token?.user) {
         session.user = {
           ...token.user,
           userRole: token.user.role,
           userId: token.user.id,
-        };
+        }
       }
-      return session;
+      return session
     },
 
-    async jwt({ token, user, trigger, session }) {
-      if (trigger === "update" && session) {
+    async jwt({ token, user, account, profile, trigger, session }) {
+      if (trigger === 'update' && session) {
         return {
           ...token,
           accessToken: session?.accessToken,
           refreshToken: session?.refreshToken,
-        };
+        }
+      }
+
+      if (account?.provider === 'google' && profile) {
+        const res = await $globalFetch(REQUEST_URLS_V1.LOGIN_EMAIL, {
+          method: 'POST',
+          data: { token_email: account.access_token },
+        })
+        console.log('Google login response:', res)
+        const userData = res?.data?.user
+        const tokens = res?.data?.tokens
+
+        return {
+          ...token,
+          accessToken: tokens?.access,
+          refreshToken: tokens?.refresh,
+          user: {
+            ...userData,
+            email: userData?.email ?? null,
+          },
+        }
+      }
+
+      if (account?.provider === 'facebook' && profile) {
+        const res = await $globalFetch(REQUEST_URLS_V1.LOGIN_FACEBOOK, {
+          method: 'POST',
+          data: { token_facebook: account.access_token },
+        })
+        const userData = res?.data?.user
+        const tokens = res?.data?.tokens
+
+        return {
+          ...token,
+          accessToken: tokens?.access,
+          refreshToken: tokens?.refresh,
+          user: {
+            ...userData,
+            email: userData?.email ?? null,
+          },
+        }
       }
 
       if (user) {
@@ -175,121 +209,128 @@ export const authOptions: NextAuthOptions = {
             ...user,
             email: user?.email ?? null,
           },
-        };
+        }
       }
 
       // Check if access token is still valid
       if (token.accessToken && !isTokenExpired(token.accessToken)) {
-        return token;
+        return token
       }
 
       // Try to refresh the token
       if (token.refreshToken) {
-        return await refreshAccessToken(token);
+        return await refreshAccessToken(token)
       }
       return {
         ...token,
-        error: "RefreshAccessTokenError",
-      };
+        error: 'RefreshAccessTokenError',
+      }
     },
   },
   providers: [
     // Google OAuth (commented out but ready to use)
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID!,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    // }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID as string,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+      authorization: {
+        params: {
+          scope: 'email public_profile',
+        },
+      },
+    }),
 
     CredentialsProvider({
-      id: "credentials",
-      name: "Credentials",
-      type: "credentials",
+      id: 'credentials',
+      name: 'Credentials',
+      type: 'credentials',
       credentials: {
         email: {
-          label: "Email",
-          type: "email",
-          placeholder: "Email",
+          label: 'Email',
+          type: 'email',
+          placeholder: 'Email',
         },
         password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Password",
+          label: 'Password',
+          type: 'password',
+          placeholder: 'Password',
         },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null;
+          return null
         }
 
         try {
           const response = await $fetch.post(REQUEST_URLS_V1.LOGIN, {
             email: credentials.email,
             password: credentials.password,
-          });
-          const userData = response?.data?.user;
-          const tokens = response?.data?.tokens;
+          })
+          const userData = response?.data?.user
+          const tokens = response?.data?.tokens
           if (!userData || !tokens) {
-            return null;
+            return null
           }
 
           return {
             ...userData,
             ...tokens,
-          };
+          }
         } catch (error: any) {
-          return null;
+          return null
         }
       },
     }),
 
     CredentialsProvider({
-      id: "token",
-      name: "Token",
-      type: "credentials",
+      id: 'token',
+      name: 'Token',
+      type: 'credentials',
       credentials: {
         user: {
-          label: "User Data",
-          type: "object",
+          label: 'User Data',
+          type: 'object',
         },
         tokens: {
-          label: "Tokens",
-          type: "object",
+          label: 'Tokens',
+          type: 'object',
         },
       },
       async authorize(credentials) {
         if (!credentials?.user || !credentials?.tokens) {
-          return null;
+          return null
         }
 
         try {
-          const userData = JSON.parse(credentials.user);
-          const tokens = JSON.parse(credentials.tokens);
+          const userData = JSON.parse(credentials.user)
+          const tokens = JSON.parse(credentials.tokens)
 
           // Verify that we have the required data
           if (!userData || !tokens?.access || !tokens?.refresh) {
-            return null;
+            return null
           }
 
           return {
             ...userData,
             access: tokens.access,
             refresh: tokens.refresh,
-          };
+          }
         } catch (error: any) {
-          console.error("Error in token provider:", error);
-          return null;
+          console.error('Error in token provider:', error)
+          return null
         }
       },
     }),
   ],
-};
+}
 
 /**
  * Wrapper for `getServerSession`
  */
-export const getServerAuthSession = (ctx: {
-  req: GetServerSidePropsContext["req"];
-  res: GetServerSidePropsContext["res"];
-}) => {
-  return getServerSession(ctx.req, ctx.res, authOptions);
-};
+export const getServerAuthSession = (ctx: { req: GetServerSidePropsContext['req']; res: GetServerSidePropsContext['res'] }) => {
+  return getServerSession(ctx.req, ctx.res, authOptions)
+}
